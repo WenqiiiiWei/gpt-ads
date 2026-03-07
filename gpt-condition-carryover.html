@@ -153,7 +153,7 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
     <!-- AD -->
     <div class="ad-row" id="ad-block">
       <div class="samsung-ad fade-in">
-        <a href="https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2" target="_blank" onclick="trackAd()" style="text-decoration:none;display:block">
+        <a href="https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2" target="_blank" onclick="trackAd();return false;" style="text-decoration:none;display:block">
           <div class="ad-banner">
             <div class="ad-banner-left">
               <div class="sam-logo">SAMSUNG</div>
@@ -207,9 +207,19 @@ function showRound(round,question){
   },1200);
 }
 function scr(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
+function getRID(){
+  try{
+    var p=new URLSearchParams(window.location.search);
+    var r=p.get('RID');
+    if(r)return r;
+    p=new URLSearchParams(window.parent.location.search);
+    return p.get('RID')||'';
+  }catch(e){return '';}
+}
 function trackAd(){
-  try{window.parent.postMessage("ad_clicked","*")}catch(e){}
-  try{window.top.postMessage("ad_clicked","*")}catch(e){}
+  var rid=getRID();
+  var url='https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2'+(rid?'?RID='+rid:'');
+  window.open(url,'_blank');
 }
 </script>
 </body>
