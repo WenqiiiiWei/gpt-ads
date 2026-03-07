@@ -3,156 +3,104 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Search Results</title>
+<title>Google</title>
 <style>
-  * {margin:0;padding:0;box-sizing:border-box;}
-  .no-click {pointer-events:none;user-select:none;}
-  .samsung-ad, .samsung-ad * {pointer-events:auto !important;}
-  .pb, .nb, .pagination, .pagination * {pointer-events:auto !important;}
-  body {font-family:arial, sans-serif;font-size:14px;color:#202124;background:#fff;}
-
-  .header {border-bottom:1px solid #ebebeb;padding:10px 24px;display:flex;align-items:center;gap:20px;position:sticky;top:0;background:#fff;z-index:10;}
-  .logo {font-size:26px;font-weight:700;letter-spacing:-1px;flex-shrink:0;}
-  .logo span:nth-child(1){color:#4285F4}
-  .logo span:nth-child(2){color:#EA4335}
-  .logo span:nth-child(3){color:#FBBC05}
-  .logo span:nth-child(4){color:#4285F4}
-  .logo span:nth-child(5){color:#34A853}
-  .logo span:nth-child(6){color:#EA4335}
-  .search-bar {display:flex;align-items:center;border:1px solid #dfe1e5;border-radius:24px;padding:8px 18px;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);flex:1;max-width:580px;}
-  .search-bar input {border:none;outline:none;font-size:16px;flex:1;color:#202124;background:transparent;}
-
-  .nav-wrap {padding:0 0 0 148px;border-bottom:1px solid #ebebeb;}
-  .nav-tabs {display:flex;}
-
-  .nav-active {padding:10px 14px;font-size:13px;color:#1a73e8;border-bottom:3px solid #1a73e8;}
-  .nav-item {padding:10px 14px;font-size:13px;color:#70757a;}
-  .nav-tabs a {padding:10px 14px;font-size:13px;color:#70757a;text-decoration:none;border-bottom:3px solid transparent;}
-  .nav-tabs a.active {color:#1a73e8;border-bottom-color:#1a73e8;}
-
-  .main {padding:14px 24px 10px 148px;max-width:860px;}
-  .results-count {font-size:13px;color:#70757a;margin-bottom:18px;}
-
-  /* Page sections */
-  .page {display:none;}
-  .page.active {display:block;}
-  @keyframes fi {from{opacity:0} to{opacity:1}}
-  .page.active {animation:fi .3s ease;}
-
-  /* Organic */
-  .organic {margin-bottom:26px;}
-  .organic-url-row {display:flex;align-items:center;gap:8px;margin-bottom:3px;}
-  .fav {width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
-  .site-name {font-size:14px;color:#202124;}
-  .site-crumb {font-size:13px;color:#5f6368;}
-  .organic-title {font-size:20px;color:#1a0dab;line-height:1.3;margin-bottom:5px;}
-  .organic-desc {font-size:14px;color:#4d5156;line-height:1.6;}
-  .organic-desc b {color:#202124;}
-  .date {color:#70757a;font-size:13px;}
-
-  /* PAA */
-  .paa-title {font-size:22px;font-weight:700;margin-bottom:14px;color:#202124;}
-  .paa-item {border:1px solid #dfe1e5;border-radius:10px;padding:14px 18px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;color:#202124;}
-  .paa-q {font-size:15px;}
-
-  /* PASF */
-  .pasf {margin-bottom:28px;}
-  .pasf-title {font-size:16px;font-weight:600;color:#202124;margin-bottom:12px;}
-  .pasf-chips {display:flex;flex-wrap:wrap;gap:8px;}
-  .pasf-chip {display:inline-flex;align-items:center;gap:6px;border:1px solid #dfe1e5;border-radius:20px;padding:8px 14px;font-size:13px;color:#202124;text-decoration:none;background:#fff;}
-
-  /* Samsung Ad */
-  .samsung-ad {border:1px solid #dadce0;border-radius:12px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
-  .ad-banner {background:linear-gradient(120deg, #1428A0 0%, #0b1c7a 60%, #03206b 100%);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
-  .ad-banner-left {flex:1;}
-  .sam-logo {font-size:17px;font-weight:900;color:#fff;letter-spacing:3px;margin-bottom:5px;}
-  .sam-headline {font-size:16px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:3px;}
-  .sam-sub {font-size:12px;color:rgba(255,255,255,.75);}
-  .sam-pill {background:#03DAC6;color:#000;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-  .ad-body {background:#fff;padding:13px 20px 14px;}
-  .ad-meta {display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;}
-  .ad-label {font-size:11px;font-weight:700;color:#188038;border:1px solid #188038;border-radius:3px;padding:1px 5px;}
-  .ad-url {font-size:13px;color:#202124;}
-  .ad-desc {font-size:14px;color:#4d5156;line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-  /* Pagination */
-  .pagination {display:flex;align-items:center;justify-content:center;gap:4px;padding:12px 0 20px;border-top:1px solid #ebebeb;margin-top:10px;}
-  .pl {font-size:26px;font-weight:700;letter-spacing:-1px;margin-right:8px;}
-  .pl span:nth-child(1){color:#4285F4}.pl span:nth-child(2){color:#EA4335}.pl span:nth-child(3){color:#FBBC05}.pl span:nth-child(4){color:#4285F4}.pl span:nth-child(5){color:#34A853}.pl span:nth-child(6){color:#EA4335}
-  .pb {width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;cursor:pointer;border:none;background:transparent;color:#1a73e8;font-family:arial, sans-serif;transition:background .15s;}
-  .pb:hover {background:#f0f4ff;}
-  .pb.active {background:#1a73e8;color:#fff;font-weight:700;}
-  .pb.active:hover {background:#1a73e8;}
-  .pb.disabled {color:#ccc;}
-  .pb.disabled:hover {background:transparent;}
-  .nb {display:flex;align-items:center;gap:4px;padding:8px 16px;border-radius:4px;font-size:14px;cursor:pointer;border:none;background:transparent;color:#1a73e8;font-family:arial, sans-serif;}
-  .nb:hover {background:#f0f4ff;text-decoration:underline;}
-
-  /* End of results */
-  .end-results {text-align:center;padding:40px 0 20px;}
-  .end-bar {display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
-  .end-bar-seg {height:3px;width:60px;}
-  .end-msg {font-size:14px;color:#70757a;margin-bottom:6px;}
-  .end-sub {font-size:13px;color:#1a73e8;}
-  .end-sub:hover {text-decoration:underline;}
+*{margin:0;padding:0;box-sizing:border-box}
+.no-click{pointer-events:none;user-select:none}
+.samsung-ad,.samsung-ad *{pointer-events:auto !important}
+.pb,.nb,.pagination,.pagination *{pointer-events:auto !important}
+body{font-family:arial,sans-serif;font-size:14px;color:#202124;background:#fff}
+.header{border-bottom:1px solid #ebebeb;padding:10px 24px;display:flex;align-items:center;gap:20px;position:sticky;top:0;background:#fff;z-index:10}
+.logo{font-size:26px;font-weight:700;letter-spacing:-1px;flex-shrink:0}
+.logo span:nth-child(1){color:#4285F4}.logo span:nth-child(2){color:#EA4335}.logo span:nth-child(3){color:#FBBC05}.logo span:nth-child(4){color:#4285F4}.logo span:nth-child(5){color:#34A853}.logo span:nth-child(6){color:#EA4335}
+.search-bar{display:flex;align-items:center;border:1px solid #dfe1e5;border-radius:24px;padding:8px 18px;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);flex:1;max-width:580px}
+.search-bar input{border:none;outline:none;font-size:16px;flex:1;color:#202124;background:transparent}
+.nav-wrap{padding:0 0 0 148px;border-bottom:1px solid #ebebeb}
+.nav-tabs{display:flex}
+.nav-active{padding:10px 14px;font-size:13px;color:#1a73e8;border-bottom:3px solid #1a73e8}
+.nav-item{padding:10px 14px;font-size:13px;color:#70757a}
+.main{padding:14px 24px 10px 148px;max-width:860px}
+.rc{font-size:13px;color:#70757a;margin-bottom:18px}
+.page{display:none}.page.active{display:block}
+.org{margin-bottom:26px}
+.org-url-row{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.fav{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.site-name{font-size:14px;color:#202124}
+.site-crumb{font-size:13px;color:#5f6368}
+.org-title{font-size:20px;color:#1a0dab;line-height:1.3;margin-bottom:5px}
+.org-desc{font-size:14px;color:#4d5156;line-height:1.6}
+.org-desc b{color:#202124;font-weight:600}
+.date{color:#70757a;font-size:13px}
+.paa-title{font-size:22px;font-weight:700;margin-bottom:14px;color:#202124}
+.paa-item{border:1px solid #dfe1e5;border-radius:10px;padding:14px 18px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;color:#202124}
+.paa-q{font-size:15px;color:#202124}
+.pasf{margin-bottom:28px}
+.pasf-title{font-size:16px;font-weight:600;color:#202124;margin-bottom:12px}
+.pasf-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pasf-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #dfe1e5;border-radius:20px;padding:8px 14px;font-size:13px;color:#202124;background:#fff}
+.samsung-ad{border:1px solid #dadce0;border-radius:12px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.ad-banner{background:linear-gradient(120deg,#1428A0,#0b1c7a 60%,#03206b);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.ad-banner-left{flex:1}
+.sam-logo{font-size:17px;font-weight:900;color:#fff;letter-spacing:3px;margin-bottom:5px}
+.sam-headline{font-size:16px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:3px}
+.sam-sub{font-size:12px;color:rgba(255,255,255,.75)}
+.sam-pill{background:#03DAC6;color:#000;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.ad-body{background:#fff;padding:13px 20px 14px}
+.ad-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px;cursor:pointer}
+.ad-label{font-size:11px;font-weight:700;color:#188038;border:1px solid #188038;border-radius:3px;padding:1px 5px}
+.ad-url{font-size:13px;color:#202124}
+.ad-desc{font-size:14px;color:#4d5156;line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.end-msg{text-align:center;padding:40px 0;color:#70757a;font-size:14px}
+.pagination{display:flex;align-items:center;justify-content:center;gap:4px;padding:30px 0 40px}
+.pb,.nb{background:#fff;border:1px solid #dadce0;border-radius:4px;padding:8px 16px;font-size:14px;color:#1a73e8;cursor:pointer;font-family:arial}
+.pb.disabled{color:#ccc;cursor:default}
+.pg{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#1a73e8;cursor:pointer;font-family:arial}
+.pg.active{background:#1a73e8;color:#fff}
 </style>
 </head>
 <body>
-
 <div class="header no-click">
   <div class="logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
   <div class="search-bar">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" value="best laptops 2026" readonly/>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9aa0a6" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
   </div>
 </div>
-
 <div class="nav-wrap no-click">
   <div class="nav-tabs">
-    <span class="nav-active">All</span>
-    <span class="nav-item">Images</span>
-    <span class="nav-item">Videos</span>
-    <span class="nav-item">News</span>
-    <span class="nav-item">Shopping</span>
-    <span class="nav-item">More</span>
+    <span class="nav-active">All</span><span class="nav-item">Images</span><span class="nav-item">Videos</span><span class="nav-item">News</span><span class="nav-item">Shopping</span><span class="nav-item">More</span>
   </div>
 </div>
-
 <div class="main">
+  <p class="rc no-click">About 3,120,000,000 results (0.41 seconds)</p>
+
+  <!-- PAGE 1 -->
   <div class="page active" id="page-1">
-    <p class="results-count no-click">About 3,120,000,000 results (0.41 seconds)</p>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#e74c3c">T</div><div><div class="site-name">TechRadar</div><div class="site-crumb">techradar.com › best-laptops-2026</div></div></div>
-      <div class="organic-title">Best laptops 2026:we tested over 100 models</div>
-      <div class="organic-desc"><span class="date">Jan 15, 2026 — </span>The <b>MacBook Pro M5</b> leads for power;<b>Samsung Galaxy Book5 Pro 360</b> wins on Galaxy AI and AMOLED display.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#e74c3c">T</div><div><div class="site-name">TechRadar</div><div class="site-crumb">techradar.com › best-laptops-2026</div></div></div>
+      <div class="org-title">Best laptops 2026: we tested over 100 models to find the top picks</div>
+      <div class="org-desc"><span class="date">Jan 15, 2026 — </span>The <b>Apple MacBook Pro M5</b> leads for raw power, but the <b>Samsung Galaxy Book5 Pro 360</b> is our surprise pick of the year.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#2980b9">P</div><div><div class="site-name">PCMag</div><div class="site-crumb">pcmag.com › best-laptops-2026</div></div></div>
-      <div class="organic-title">The Best Laptops of 2026 — PCMag Editors' Choice</div>
-      <div class="organic-desc"><span class="date">Feb 3, 2026 — </span>The <b>Dell XPS 16</b> earns best Windows overall;<b>Lenovo ThinkPad X1 Carbon Ultra</b> leads for business.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#2980b9">P</div><div><div class="site-name">PCMag</div><div class="site-crumb">pcmag.com › best-laptops-2026</div></div></div>
+      <div class="org-title">The Best Laptops of 2026 — PCMag Editors' Choice</div>
+      <div class="org-desc"><span class="date">Feb 3, 2026 — </span>This year is dominated by AI-native laptops. The <b>Dell XPS 16</b> earns best Windows overall, while the <b>Lenovo ThinkPad X1 Carbon Ultra</b> remains the gold standard.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#27ae60">W</div><div><div class="site-name">Wirecutter – NYT</div><div class="site-crumb">nytimes.com › wirecutter › best-laptops</div></div></div>
-      <div class="organic-title">The Best Laptops of 2026 | Wirecutter</div>
-      <div class="organic-desc"><span class="date">Mar 1, 2026 — </span><b>MacBook Air M4</b> is our top pick;<b>Dell XPS 15</b> leads for Windows users.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#27ae60">W</div><div><div class="site-name">Wirecutter – NYT</div><div class="site-crumb">nytimes.com › wirecutter › best-laptops</div></div></div>
+      <div class="org-title">The Best Laptops of 2026 | Wirecutter</div>
+      <div class="org-desc"><span class="date">Mar 1, 2026 — </span>After 400+ hours of testing, the <b>MacBook Air M4</b> remains our pick for most people, and the <b>Dell XPS 15</b> leads for Windows users.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#8e44ad">T</div><div><div class="site-name">Tom's Guide</div><div class="site-crumb">tomsguide.com › best-laptops-2026</div></div></div>
-      <div class="organic-title">Best laptops 2026:Tom's Guide top picks tested</div>
-      <div class="organic-desc"><span class="date">Feb 14, 2026 — </span><b>MacBook Pro M5</b> and <b>Dell XPS 16</b> lead;<b>ASUS ROG Zephyrus G16</b> tops gaming.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#8e44ad">V</div><div><div class="site-name">RTINGS.com</div><div class="site-crumb">rtings.com › best-laptops-2026</div></div></div>
+      <div class="org-title">The Best Laptops of 2026 — RTINGS</div>
+      <div class="org-desc"><span class="date">Feb 20, 2026 — </span>We test every laptop for brightness, color accuracy, and performance. This year's standout: the <b>Samsung Galaxy Book5 Pro 360</b> for its OLED panel.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#c0392b">R</div><div><div class="site-name">RTINGS</div><div class="site-crumb">rtings.com › laptops › recommendations</div></div></div>
-      <div class="organic-title">Best Laptops of 2026 — RTINGS.com Recommendations</div>
-      <div class="organic-desc"><span class="date">Mar 3, 2026 — </span><b>Galaxy Book5 Pro 360</b> tops display quality;<b>MacBook Pro M5 Max</b> leads performance.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#e67e22">T</div><div><div class="site-name">Tom's Guide</div><div class="site-crumb">tomsguide.com › best-laptops-2026</div></div></div>
+      <div class="org-title">Best Laptops 2026: Top Picks for Every Budget</div>
+      <div class="org-desc"><span class="date">Jan 28, 2026 — </span>From gaming rigs to ultrabooks, here are the best laptops you can buy in 2026 — starting with the <b>MacBook Pro M5</b> and <b>Dell XPS 16</b>.</div>
     </div>
-
     <div class="pasf no-click">
       <div class="pasf-title">People also search for</div>
       <div class="pasf-chips">
@@ -163,12 +111,12 @@
         <span class="pasf-chip">🔍 Laptop under $1,000</span>
         <span class="pasf-chip">🔍 Dell XPS 16 2026</span>
         <span class="pasf-chip">🔍 Best OLED laptop</span>
-              </div>
+      </div>
     </div>
   </div>
-  <div class="page" id="page-2">
-    <p class="results-count no-click">About 3,120,000,000 results (0.41 seconds)</p>
 
+  <!-- PAGE 2 -->
+  <div class="page" id="page-2">
     <div style="margin-bottom:26px;" class="no-click">
       <div class="paa-title">People also ask</div>
       <div class="paa-item"><span class="paa-q">Is the Samsung Galaxy Book5 Pro worth it in 2026?</span><span style="color:#202124">▾</span></div>
@@ -176,42 +124,37 @@
       <div class="paa-item"><span class="paa-q">MacBook vs Windows laptop — which is better now?</span><span style="color:#202124">▾</span></div>
       <div class="paa-item"><span class="paa-q">What AI features do 2026 laptops have?</span><span style="color:#202124">▾</span></div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#e67e22">V</div><div><div class="site-name">The Verge</div><div class="site-crumb">theverge.com › best-laptops-2026</div></div></div>
-      <div class="organic-title">The best laptops to buy in 2026 — The Verge</div>
-      <div class="organic-desc"><span class="date">Feb 22, 2026 — </span><b>MacBook Pro M5</b> leads for professionals;<b>Dell XPS 16</b> offers stunning OLED.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#c0392b">Y</div><div><div class="site-name">YouTube</div><div class="site-crumb">youtube.com › watch</div></div></div>
+      <div class="org-title">Best Laptops of 2026 — Full Review Roundup</div>
+      <div class="org-desc"><span class="date">Feb 10, 2026 — </span>We put the top 10 laptops through their paces in this comprehensive video review — including the <b>Galaxy Book5 Pro 360</b> and <b>MacBook Pro M5</b>.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#16a085">E</div><div><div class="site-name">Engadget</div><div class="site-crumb">engadget.com › best-laptops-2026</div></div></div>
-      <div class="organic-title">Best laptops 2026:Engadget's top recommendations</div>
-      <div class="organic-desc"><span class="date">Jan 30, 2026 — </span><b>ThinkPad X1 Carbon Ultra</b> for business;<b>ROG Zephyrus G16</b> for portable gaming.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#16a085">E</div><div><div class="site-name">Engadget</div><div class="site-crumb">engadget.com › best-laptops-2026</div></div></div>
+      <div class="org-title">The best laptops to buy in 2026</div>
+      <div class="org-desc"><span class="date">Mar 2, 2026 — </span>Whether you need a laptop for work, creativity, or gaming, these are the best picks across every category for 2026.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#2c3e50">A</div><div><div class="site-name">Ars Technica</div><div class="site-crumb">arstechnica.com › gadgets › best-laptops</div></div></div>
-      <div class="organic-title">The best laptops of 2026, reviewed by Ars Technica</div>
-      <div class="organic-desc"><span class="date">Mar 4, 2026 — </span><b>Galaxy Book5 Pro 360</b> leads on Galaxy AI;<b>MacBook Air M4</b> for everyday use.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#2c3e50">A</div><div><div class="site-name">Ars Technica</div><div class="site-crumb">arstechnica.com › gadgets › laptops</div></div></div>
+      <div class="org-title">2026 laptop guide: what to buy and what to skip</div>
+      <div class="org-desc"><span class="date">Feb 25, 2026 — </span>Our detailed buying guide covers performance benchmarks, battery life, and value for money across the top 2026 laptop lineup.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#1abc9c">C</div><div><div class="site-name">CNET</div><div class="site-crumb">cnet.com › tech › best-laptops</div></div></div>
-      <div class="organic-title">Best Laptops for 2026 — CNET Tested and Reviewed</div>
-      <div class="organic-desc"><span class="date">Feb 18, 2026 — </span><b>MacBook Pro M5 Max</b> for power, <b>Dell XPS 15</b> for creators, <b>Galaxy Book5 360</b> for best display under $1k.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#1abc9c">C</div><div><div class="site-name">CNET</div><div class="site-crumb">cnet.com › best-laptops-2026</div></div></div>
+      <div class="org-title">Best Laptops for 2026 — CNET Editors' Choice</div>
+      <div class="org-desc"><span class="date">Jan 20, 2026 — </span>CNET's top laptop picks for 2026, tested by our expert reviewers across portability, display, and real-world performance.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#e74c3c">T</div><div><div class="site-name">TechRadar</div><div class="site-crumb">techradar.com › laptops › buying-guide</div></div></div>
-      <div class="organic-title">How to choose the best laptop in 2026 — buying guide</div>
-      <div class="organic-desc"><span class="date">Jan 20, 2026 — </span>Covers processors, RAM, display and battery to help you choose.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#7f8c8d">V</div><div><div class="site-name">The Verge</div><div class="site-crumb">theverge.com › best-laptops-2026</div></div></div>
+      <div class="org-title">The best laptops of 2026</div>
+      <div class="org-desc"><span class="date">Feb 14, 2026 — </span>From MacBooks to Windows ultrabooks, The Verge picks the best laptops for students, creators, and professionals in 2026.</div>
     </div>
   </div>
-  <div class="page" id="page-3">
-    <p class="results-count no-click">About 3,120,000,000 results (0.41 seconds)</p>
 
+  <!-- PAGE 3 — AD PAGE -->
+  <div class="page" id="page-3">
     <div class="samsung-ad">
-      <a href="#" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank');return false;" style="text-decoration:none;display:block;">
+      <a href="https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2" target="_blank" onclick="trackAd()" style="text-decoration:none;display:block">
         <div class="ad-banner">
           <div class="ad-banner-left">
             <div class="sam-logo">SAMSUNG</div>
@@ -222,75 +165,55 @@
         </div>
       </a>
       <div class="ad-body">
-        <div class="ad-meta" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank');return false;" style="cursor:pointer">
+        <div class="ad-meta" onclick="trackAd();window.open('https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2','_blank')">
           <span class="ad-label">Ad</span><span class="ad-url">samsung.com › galaxy-book5-pro-360</span>
         </div>
         <div class="ad-desc">Meet the thinnest Galaxy Book yet — Snapdragon X Elite 2, 3K AMOLED touchscreen, and Galaxy AI built-in.</div>
       </div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#2980b9">P</div><div><div class="site-name">PCMag</div><div class="site-crumb">pcmag.com › best-laptop-deals-2026</div></div></div>
-      <div class="organic-title">Best Laptop Deals in 2026 — PCMag Deal Tracker</div>
-      <div class="organic-desc"><span class="date">Mar 5, 2026 — </span>$200 off <b>Dell XPS 15</b>, $150 off <b>Galaxy Book5 360</b>, education pricing on <b>MacBook Air M4</b>.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#3498db">B</div><div><div class="site-name">Best Buy</div><div class="site-crumb">bestbuy.com › laptops</div></div></div>
+      <div class="org-title">Shop Laptops 2026 — Best Buy</div>
+      <div class="org-desc">Find the latest laptops from Apple, Samsung, Dell, and more at Best Buy. Free shipping on orders over $35.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#8e44ad">T</div><div><div class="site-name">Tom's Guide</div><div class="site-crumb">tomsguide.com › laptop-specs-explained</div></div></div>
-      <div class="organic-title">Laptop specs explained:what to look for in 2026</div>
-      <div class="organic-desc"><span class="date">Feb 5, 2026 — </span>Breaks down RAM, storage and display specs for <b>best laptops of 2026</b>.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#e74c3c">A</div><div><div class="site-name">Amazon</div><div class="site-crumb">amazon.com › laptops-2026</div></div></div>
+      <div class="org-title">Best Sellers in Laptops 2026 — Amazon</div>
+      <div class="org-desc">Shop Amazon's best-selling laptops of 2026. Free delivery and easy returns on top laptop brands.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#16a085">E</div><div><div class="site-name">Engadget</div><div class="site-crumb">engadget.com › gaming-laptops-2026</div></div></div>
-      <div class="organic-title">Best gaming laptops of 2026 — Engadget</div>
-      <div class="organic-desc"><span class="date">Feb 27, 2026 — </span><b>ROG Zephyrus G16</b> and <b>Razer Blade 16</b> lead gaming with RTX 5080 in slim builds.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#27ae60">N</div><div><div class="site-name">Notebookcheck</div><div class="site-crumb">notebookcheck.net › top-laptops-2026</div></div></div>
+      <div class="org-title">Top 10 Laptops 2026 — Notebookcheck</div>
+      <div class="org-desc"><span class="date">Mar 3, 2026 — </span>Detailed specs, benchmarks, and reviews for the top 10 laptops of 2026 across all price ranges.</div>
     </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#c0392b">R</div><div><div class="site-name">RTINGS</div><div class="site-crumb">rtings.com › laptops › compare</div></div></div>
-      <div class="organic-title">Compare laptops side by side — RTINGS.com</div>
-      <div class="organic-desc"><span class="date">Mar 1, 2026 — </span>Compare display and battery across <b>MacBook Pro M5</b>, <b>Galaxy Book5 Pro 360</b>, <b>Dell XPS 16</b>.</div>
-    </div>
-
-    <div class="organic no-click">
-      <div class="organic-url-row"><div class="fav" style="background:#27ae60">W</div><div><div class="site-name">Wirecutter – NYT</div><div class="site-crumb">nytimes.com › wirecutter › laptop-buying-guide</div></div></div>
-      <div class="organic-title">How to Buy a Laptop in 2026 | Wirecutter</div>
-      <div class="organic-desc"><span class="date">Feb 10, 2026 — </span>Covers Windows vs macOS, screen size, portability and value in 2026.</div>
+    <div class="org no-click">
+      <div class="org-url-row"><div class="fav" style="background:#8e44ad">R</div><div><div class="site-name">Reddit</div><div class="site-crumb">reddit.com › r/laptops › best_laptops_2026</div></div></div>
+      <div class="org-title">Best laptops 2026 — community recommendations (r/laptops)</div>
+      <div class="org-desc"><span class="date">Feb 18, 2026 — </span>Community thread discussing the best laptops of 2026. Top comment: "Galaxy Book5 Pro 360 for Windows, MacBook Air M4 for Apple ecosystem."</div>
     </div>
   </div>
+
+  <!-- PAGES 4-10 -->
   <div class="page" id="page-end">
-    <div class="end-results">
-      <div class="end-bar">
-        <div class="end-bar-seg" style="background:#4285F4"></div>
-        <div class="end-bar-seg" style="background:#EA4335"></div>
-        <div class="end-bar-seg" style="background:#FBBC05"></div>
-        <div class="end-bar-seg" style="background:#4285F4"></div>
-        <div class="end-bar-seg" style="background:#34A853"></div>
-        <div class="end-bar-seg" style="background:#EA4335"></div>
-      </div>
-      <div class="end-msg">We have omitted entries similar to the <span id="ec">30</span> already displayed.</div>
-      <div class="end-sub">Repeat the search to include omitted results.</div>
-    </div>
+    <div class="end-msg">Showing results <span id="ec">40</span>–<span id="ec2">50</span> of about 3,120,000,000</div>
   </div>
 
+  <!-- PAGINATION -->
+  <div class="pagination">
+    <button class="pb disabled" id="prev-btn" onclick="go(cp-1)">‹ Prev</button>
+    <div class="pg active" id="b1" onclick="go(1)">1</div>
+    <div class="pg" id="b2" onclick="go(2)">2</div>
+    <div class="pg" id="b3" onclick="go(3)">3</div>
+    <div class="pg" id="b4" onclick="go(4)">4</div>
+    <div class="pg" id="b5" onclick="go(5)">5</div>
+    <div class="pg" id="b6" onclick="go(6)">6</div>
+    <div class="pg" id="b7" onclick="go(7)">7</div>
+    <div class="pg" id="b8" onclick="go(8)">8</div>
+    <div class="pg" id="b9" onclick="go(9)">9</div>
+    <div class="pg" id="b10" onclick="go(10)">10</div>
+    <button class="nb" id="next-btn" onclick="go(cp+1)">Next ›</button>
+  </div>
 </div>
-<div class="pagination">
-  <div class="pl"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
-  <button class="pb disabled" id="prev-btn" onclick="go(cp-1)">‹</button>
-  <button class="pb active" id="b1" onclick="go(1)">1</button>
-  <button class="pb" id="b2" onclick="go(2)">2</button>
-  <button class="pb" id="b3" onclick="go(3)">3</button>
-  <button class="pb" id="b4" onclick="go(4)">4</button>
-  <button class="pb" id="b5" onclick="go(5)">5</button>
-  <button class="pb" id="b6" onclick="go(6)">6</button>
-  <button class="pb" id="b7" onclick="go(7)">7</button>
-  <button class="pb" id="b8" onclick="go(8)">8</button>
-  <button class="pb" id="b9" onclick="go(9)">9</button>
-  <button class="pb" id="b10" onclick="go(10)">10</button>
-  <button class="nb" id="next-btn" onclick="go(cp+1)">Next ›</button>
-</div>
-
 <script>
 var cp=1;
 function go(p){
@@ -309,7 +232,6 @@ function go(p){
 function trackAd(){
   try{window.parent.postMessage("ad_clicked","*")}catch(e){}
   try{window.top.postMessage("ad_clicked","*")}catch(e){}
-  try{document.cookie="ad_clicked=1;path=/"}catch(e){}
 }
 </script>
 </body>
