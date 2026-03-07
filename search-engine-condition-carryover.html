@@ -211,7 +211,7 @@
     <p class="results-count no-click">About 3,120,000,000 results (0.41 seconds)</p>
 
     <div class="samsung-ad">
-      <a href="https://www.samsung.com/us/computing/galaxy-books/" target="_blank" onclick="trackAd()" style="text-decoration:none;display:block;">
+      <a href="#" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank');return false;" style="text-decoration:none;display:block;">
         <div class="ad-banner">
           <div class="ad-banner-left">
             <div class="sam-logo">SAMSUNG</div>
@@ -222,7 +222,7 @@
         </div>
       </a>
       <div class="ad-body">
-        <div class="ad-meta" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank')" style="cursor:pointer">
+        <div class="ad-meta" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank');return false;" style="cursor:pointer">
           <span class="ad-label">Ad</span><span class="ad-url">samsung.com › galaxy-book5-pro-360</span>
         </div>
         <div class="ad-desc">Meet the thinnest Galaxy Book yet — Snapdragon X Elite 2, 3K AMOLED touchscreen, and Galaxy AI built-in.</div>
@@ -292,25 +292,24 @@
 </div>
 
 <script>
-var cp = 1;
-function go(p) {
-  if (p < 1 || p > 10) return;
-  document.querySelectorAll('.page').forEach(function(el){ el.classList.remove('active'); });
-  cp = p;
-  var id = p <= 3 ? 'page-' + p : 'page-end';
-  var el = document.getElementById(id);
-  if (el) el.classList.add('active');
-  if (p > 3) { var ec = document.getElementById('ec'); if(ec) ec.textContent = p * 10; }
-  for (var i = 1; i <= 10; i++) { var b = document.getElementById('b'+i); if(b) b.classList.toggle('active', i === p); }
-  var prev = document.getElementById('prev-btn'); if(prev) prev.classList.toggle('disabled', p === 1);
-  var next = document.getElementById('next-btn'); if(next) next.style.display = p === 10 ? 'none' : 'flex';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+var cp=1;
+function go(p){
+  if(p<1||p>10)return;
+  document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active');});
+  cp=p;
+  var id=p<=3?'page-'+p:'page-end';
+  var el=document.getElementById(id);
+  if(el)el.classList.add('active');
+  if(p>3){var ec=document.getElementById('ec');if(ec)ec.textContent=p*10;}
+  for(var i=1;i<=10;i++){var b=document.getElementById('b'+i);if(b)b.classList.toggle('active',i===p);}
+  var prev=document.getElementById('prev-btn');if(prev)prev.classList.toggle('disabled',p===1);
+  var next=document.getElementById('next-btn');if(next)next.style.display=p===10?'none':'flex';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function trackAd() {
-  try{localStorage.setItem("ad_clicked","1")}catch(e){}
+function trackAd(){
   try{window.parent.postMessage("ad_clicked","*")}catch(e){}
-  try{window.Qualtrics.SurveyEngine.setEmbeddedData("ad_clicked","1")}catch(e){}
-  try{window.parent.Qualtrics.SurveyEngine.setEmbeddedData("ad_clicked","1")}catch(e){}
+  try{window.top.postMessage("ad_clicked","*")}catch(e){}
+  try{document.cookie="ad_clicked=1;path=/"}catch(e){}
 }
 </script>
 </body>
