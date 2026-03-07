@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ChatGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#fff;color:#202124}
+.layout{display:flex;width:100%}
+.sidebar{width:180px;min-width:180px;background:#f9f9f9;border-right:1px solid #e5e5e5;padding:8px 6px}
+.sb-top{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;margin-bottom:4px}
+.sb-logo{font-size:13px;font-weight:700;color:#202124}
+.sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px;cursor:default}
+.sb-section{font-size:10px;color:#999;padding:8px 8px 3px;text-transform:uppercase;letter-spacing:.5px}
+.sb-item{padding:6px 8px;border-radius:6px;color:#555;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-item.active{background:#e8e8e8;color:#202124;font-weight:500}
+.chat-area{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{padding:10px 16px;border-bottom:1px solid #e5e5e5;font-size:14px;font-weight:600;color:#202124}
+.topbar span{font-size:11px;color:#999;font-weight:400}
+.messages{padding:16px 0 8px}
+.msg-row{padding:6px 8%}
+.divider{margin:4px 8%;border:none;border-top:1px dashed #e5e5e5}
+.user-wrap{display:flex;justify-content:flex-end}
+.user-bubble{background:#f0f0f0;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:75%;font-size:14px;line-height:1.6}
+.asst-body{font-size:14px;line-height:1.7;color:#4d5156}
+.asst-body p{margin-bottom:10px}
+.asst-body ol,.asst-body ul{padding-left:20px;margin-bottom:10px}
+.asst-body li{margin-bottom:6px}
+.asst-body strong{color:#202124;font-weight:600}
+.sources-row{padding:2px 8% 14px}
+.sources-label{font-size:11px;font-weight:600;color:#70757a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sources-grid{display:flex;flex-direction:column;gap:6px}
+.source-card{border:1px solid #e5e5e5;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;background:#fafafa}
+.source-fav{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.source-title{font-size:13px;color:#1a0dab;line-height:1.3;margin-bottom:1px}
+.source-url{font-size:11px;color:#5f6368}
+.suggest-wrap{padding:4px 8% 14px}
+.suggest-btn{background:#f0f4ff;border:2px solid #1a73e8;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#1a73e8;cursor:pointer;text-align:left;font-family:inherit;width:100%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(26,115,232,.12);transition:background .15s}
+.suggest-btn:hover{background:#e0ecff}
+.typing-row{padding:8px 8%;display:none}
+.typing-dots{display:flex;gap:4px}
+.typing-dots span{width:7px;height:7px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.hidden-round{display:none}
+.ad-row{padding:2px 8% 18px;display:none}
+.samsung-ad{border:1px solid #dadce0;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.ad-banner{background:linear-gradient(120deg,#1428A0,#0b1c7a 60%,#03206b);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ad-banner-left{flex:1}
+.sam-logo{font-size:15px;font-weight:900;color:#fff;letter-spacing:3px;margin-bottom:4px}
+.sam-headline{font-size:14px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:2px}
+.sam-sub{font-size:11px;color:rgba(255,255,255,.75)}
+.sam-pill{background:#03DAC6;color:#000;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.ad-body{background:#fff;padding:10px 16px 14px}
+.ad-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.ad-label{font-size:11px;font-weight:700;color:#188038;border:1px solid #188038;border-radius:3px;padding:1px 5px}
+.ad-url{font-size:12px;color:#202124}
+.ad-desc{font-size:13px;color:#4d5156;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.input-area{padding:8px 8% 20px}
+.input-box{background:#f4f4f4;border:1px solid #e0e0e0;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.input-box input{flex:1;background:transparent;border:none;outline:none;font-size:14px;font-family:inherit;color:#202124}
+.input-box input::placeholder{color:#aaa}
+.send-btn{background:#d0d0d0;border:none;border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:default;color:#555;font-size:15px}
+.disclaimer{text-align:center;font-size:11px;color:#aaa;margin-top:6px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="sidebar">
+  <div class="sb-top"><div class="sb-logo">ChatGPT</div><button class="sb-btn">✏</button></div>
+  <div class="sb-section">Today</div>
+  <div class="sb-item active">Best laptops 2026</div>
+</div>
+<div class="chat-area">
+  <div class="topbar">ChatGPT <span>▾ GPT-5.4</span></div>
+  <div class="messages" id="messages">
+
+    <!-- ROUND 1 -->
+    <div class="msg-row">
+      <div class="user-wrap"><div class="user-bubble">What are the best laptops in 2026?</div></div>
+    </div>
+    <div class="msg-row">
+      <div class="asst-body">
+        <p>Here are the <strong>top laptops of 2026</strong>, ranked by experts:</p>
+        <ol>
+          <li><strong>Apple MacBook Pro 16" (M5 Max)</strong> – Fastest chip, best-in-class performance</li>
+          <li><strong>Samsung Galaxy Book5 Pro 360</strong> – Best AI-integrated Windows laptop</li>
+          <li><strong>Dell XPS 16 (2026)</strong> – Best OLED display for creatives</li>
+          <li><strong>Lenovo ThinkPad X1 Carbon Ultra</strong> – Best for enterprise &amp; travel</li>
+          <li><strong>ASUS ROG Zephyrus G16</strong> – Best thin-and-light gaming laptop</li>
+        </ol>
+        <p>Let me know your budget or use case for a more specific recommendation!</p>
+      </div>
+    </div>
+    <div class="sources-row">
+      <div class="sources-label">Sources</div>
+      <div class="sources-grid">
+        <div class="source-card"><div class="source-fav" style="background:#e74c3c">T</div><div><div class="source-title">Best laptops 2026: top picks tested and ranked</div><div class="source-url">techradar.com › best-laptops-2026</div></div></div>
+        <div class="source-card"><div class="source-fav" style="background:#2980b9">P</div><div><div class="source-title">The Best Laptops of 2026 — PCMag Editors' Choice</div><div class="source-url">pcmag.com › best-laptops-2026</div></div></div>
+        <div class="source-card"><div class="source-fav" style="background:#27ae60">W</div><div><div class="source-title">The Best Laptops of 2026 | Wirecutter</div><div class="source-url">nytimes.com › wirecutter › best-laptops</div></div></div>
+      </div>
+    </div>
+    <div class="suggest-wrap" id="suggestions-1">
+      <button class="suggest-btn" onclick="showRound(2,'Which one is best under $1,000?')">
+        💬 Which one is best under $1,000? <span>›</span>
+      </button>
+    </div>
+
+    <!-- Typing 2 -->
+    <div class="typing-row" id="typing-2"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+
+    <!-- ROUND 2 -->
+    <div class="hidden-round" id="round-2">
+      <hr class="divider"/>
+      <div class="msg-row fade-in">
+        <div class="user-wrap"><div class="user-bubble" id="user-q2">Which one is best under $1,000?</div></div>
+      </div>
+      <div class="msg-row fade-in">
+        <div class="asst-body">
+          <p>For a budget under $1,000, here are the top picks:</p>
+          <ol>
+            <li><strong>Samsung Galaxy Book5 360 ($899)</strong> – Great OLED display, Intel Core Ultra 9, seamless phone integration.</li>
+            <li><strong>MacBook Air M4 ($999)</strong> – Best-in-class battery life, silent fanless design, excellent build quality.</li>
+            <li><strong>Lenovo IdeaPad Pro 5 ($799)</strong> – Solid everyday performance, long battery, great keyboard.</li>
+          </ol>
+          <p>The <strong>Samsung Galaxy Book5 360</strong> and <strong>MacBook Air M4</strong> are the strongest all-rounders in this range.</p>
+        </div>
+      </div>
+      <div class="suggest-wrap" id="suggestions-2">
+        <button class="suggest-btn" onclick="showRound(3,'How do the top two picks compare head-to-head?')">
+          💬 How do the top two picks compare head-to-head? <span>›</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Typing 3 -->
+    <div class="typing-row" id="typing-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+
+    <!-- ROUND 3 -->
+    <div class="hidden-round" id="round-3">
+      <hr class="divider"/>
+      <div class="msg-row fade-in">
+        <div class="user-wrap"><div class="user-bubble" id="user-q3">How do the top two picks compare head-to-head?</div></div>
+      </div>
+      <div class="msg-row fade-in">
+        <div class="asst-body">
+          <p>Here's how the <strong>MacBook Air M4</strong> and <strong>Samsung Galaxy Book5 360</strong> compare:</p>
+          <ul>
+            <li><strong>Battery:</strong> MacBook Air M4 wins — up to 18 hrs vs. ~12 hrs</li>
+            <li><strong>Display:</strong> Galaxy Book5 360 wins — OLED vs. IPS LCD</li>
+            <li><strong>Performance:</strong> Roughly equal for everyday tasks</li>
+            <li><strong>Ecosystem:</strong> MacBook for iPhone users; Galaxy Book5 for Android users</li>
+            <li><strong>Price:</strong> Galaxy Book5 360 ($899) is $100 cheaper</li>
+          </ul>
+          <p>Go <strong>MacBook Air M4</strong> for battery; <strong>Galaxy Book5 360</strong> for display and value.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing Ad -->
+    <div class="typing-row" id="typing-ad"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+
+    <!-- AD -->
+    <div class="ad-row" id="ad-block">
+      <div class="samsung-ad fade-in">
+        <a href="https://www.samsung.com/us/computing/galaxy-books/" target="_blank" onclick="trackAd()" style="text-decoration:none;display:block">
+          <div class="ad-banner">
+            <div class="ad-banner-left">
+              <div class="sam-logo">SAMSUNG</div>
+              <div class="sam-headline">Galaxy Book5 Pro 360 — The AI Laptop of 2026</div>
+              <div class="sam-sub">Galaxy AI built-in · Snapdragon X Elite 2 · 3K AMOLED · From $1,199</div>
+            </div>
+            <div class="sam-pill">✦ New 2026 Model</div>
+          </div>
+        </a>
+        <div class="ad-body">
+          <div class="ad-meta" onclick="trackAd();window.open('https://www.samsung.com/us/computing/galaxy-books/','_blank')" style="cursor:pointer">
+            <span class="ad-label">Ad</span><span class="ad-url">samsung.com › galaxy-book5-pro-360</span>
+          </div>
+          <div class="ad-desc">Meet the thinnest Galaxy Book yet — Snapdragon X Elite 2, 3K AMOLED touchscreen, and Galaxy AI built-in.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="input-area">
+    <div class="input-box">
+      <input type="text" placeholder="Message ChatGPT" readonly/>
+      <button class="send-btn">↑</button>
+    </div>
+    <div class="disclaimer">ChatGPT can make mistakes. Consider checking important information.</div>
+  </div>
+</div>
+</div>
+<script>
+function showRound(round,question){
+  var prev=document.getElementById('suggestions-'+(round-1));
+  if(prev)prev.style.display='none';
+  var typing=document.getElementById('typing-'+round);
+  if(typing)typing.style.display='block';
+  setTimeout(function(){
+    if(typing)typing.style.display='none';
+    var r=document.getElementById('round-'+round);
+    if(r){r.style.display='block';var q=document.getElementById('user-q'+round);if(q)q.textContent=question;}
+    if(round===3){
+      setTimeout(function(){
+        var ta=document.getElementById('typing-ad');
+        if(ta)ta.style.display='block';
+        setTimeout(function(){
+          if(ta)ta.style.display='none';
+          var ad=document.getElementById('ad-block');
+          if(ad)ad.style.display='block';
+          scroll();
+        },1200);
+      },600);
+    }
+    scroll();
+  },1200);
+}
+function scroll(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
+function trackAd(){
+  try{localStorage.setItem("ad_clicked","1")}catch(e){}
+  try{window.parent.postMessage("ad_clicked","*")}catch(e){}
+  try{window.Qualtrics.SurveyEngine.setEmbeddedData("ad_clicked","1")}catch(e){}
+  try{window.parent.Qualtrics.SurveyEngine.setEmbeddedData("ad_clicked","1")}catch(e){}
+}
+</script>
+</body>
+</html>
