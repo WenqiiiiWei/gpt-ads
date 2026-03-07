@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Google</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.no-click { pointer-events: none; user-select: none; }
+
+body { font-family: arial, sans-serif; font-size: 14px; color:#202124; background: #fff; }
+.header { border-bottom: 1px solid #ebebeb; padding: 10px 24px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; background: #fff; z-index: 10; }
+.logo { font-size: 26px; font-weight: 700; letter-spacing: -1px; flex-shrink: 0; }
+.logo span:nth-child(1){color:#4285F4}.logo span:nth-child(2){color:#EA4335}.logo span:nth-child(3){color:#FBBC05}.logo span:nth-child(4){color:#4285F4}.logo span:nth-child(5){color:#34A853}.logo span:nth-child(6){color:#EA4335}
+.search-bar { display: flex; align-items: center; border: 1px solid #dfe1e5; border-radius: 24px; padding: 8px 18px; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); flex: 1; max-width: 580px; }
+.search-bar input { border: none; outline: none; font-size: 16px; flex: 1; color:#202124; background: transparent; }
+.nav-wrap { padding: 0 0 0 148px; border-bottom: 1px solid #ebebeb; }
+.nav-tabs { display: flex; }
+.nav-active { padding: 10px 14px; font-size: 13px; color: #1a73e8; border-bottom: 3px solid #1a73e8; }
+.nav-item { padding: 10px 14px; font-size: 13px; color: #70757a; }
+.main { padding: 14px 24px 10px 148px; max-width: 860px; }
+.results-count { font-size: 13px; color: #70757a; margin-bottom: 18px; }
+
+.ad-banner { background: linear-gradient(120deg, #1428A0 0%, #0b1c7a 60%, #03206b 100%); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ad-banner-left { flex: 1; }
+.sam-logo { font-size: 17px; font-weight: 900; color: #fff; letter-spacing: 3px; margin-bottom: 5px; }
+.sam-headline { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.3; margin-bottom: 3px; }
+.sam-sub { font-size: 12px; color: rgba(255,255,255,.75); }
+.sam-pill { background: #03DAC6; color: #000; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.ad-body { background: #fff; padding: 13px 20px 14px; }
+.ad-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; cursor: pointer; }
+.ad-label { font-size: 11px; font-weight: 700; color:#188038; border: 1px solid #188038; border-radius: 3px; padding: 1px 5px; }
+.ad-url { font-size: 13px; color:#202124; }
+.ad-desc { font-size: 14px; color:#4d5156; line-height: 1.55; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.organic { margin-bottom: 26px; }
+.organic-url-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.fav { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.site-name { font-size: 14px; color:#202124; }
+.site-crumb { font-size: 13px; color: #5f6368; }
+.organic-title { font-size: 20px; color:#1a0dab; line-height: 1.3; margin-bottom: 5px; }
+.organic-desc { font-size: 14px; color:#4d5156; line-height: 1.6; }
+.organic-desc b { color:#202124; font-weight: 600; }
+.date { color: #70757a; font-size: 13px; }
+.paa-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; color:#202124; }
+.paa-item { border: 1px solid #dfe1e5; border-radius: 10px; padding: 14px 18px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; color:#202124; }
+.paa-q { font-size: 15px; color:#202124; }
+.pasf { margin-bottom: 28px; }
+.pasf-title { font-size: 16px; font-weight: 600; color:#202124; margin-bottom: 12px; }
+.pasf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pasf-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #dfe1e5; border-radius: 20px; padding: 8px 14px; font-size: 13px; color:#202124; background: #fff; }
+</style>
+</head>
+<body>
+<div class="header no-click">
+  <div class="logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
+  <div class="search-bar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" value="best laptops 2026" readonly/>
+  </div>
+</div>
+<div class="nav-wrap no-click">
+  <div class="nav-tabs">
+    <span class="nav-active">All</span><span class="nav-item">Images</span><span class="nav-item">Videos</span><span class="nav-item">News</span><span class="nav-item">Shopping</span><span class="nav-item">More</span>
+  </div>
+</div>
+<div class="main">
+  <p class="results-count no-click">About 3,120,000,000 results (0.41 seconds)</p>
+  
+  <div class="organic no-click">
+    <div class="organic-url-row"><div class="fav" style="background:#e74c3c">T</div><div><div class="site-name">TechRadar</div><div class="site-crumb">techradar.com › best-laptops-2026</div></div></div>
+    <div class="organic-title">Best laptops 2026: we tested over 100 models to find the top picks</div>
+    <div class="organic-desc"><span class="date">Jan 15, 2026 — </span>The <b>Apple MacBook Pro M5</b> leads for raw power, but the <b>Samsung Galaxy Book5 Pro 360</b> is our surprise pick of the year.</div>
+  </div>
+  <div class="organic no-click">
+    <div class="organic-url-row"><div class="fav" style="background:#2980b9">P</div><div><div class="site-name">PCMag</div><div class="site-crumb">pcmag.com › best-laptops-2026</div></div></div>
+    <div class="organic-title">The Best Laptops of 2026 — PCMag Editors' Choice</div>
+    <div class="organic-desc"><span class="date">Feb 3, 2026 — </span>This year is dominated by AI-native laptops. The <b>Dell XPS 16</b> earns best Windows overall, while the <b>Lenovo ThinkPad X1 Carbon Ultra</b> remains the gold standard for business travelers.</div>
+  </div>
+  <div style="margin-bottom:26px;" class="no-click">
+    <div class="paa-title">People also ask</div>
+    <div class="paa-item"><span class="paa-q">Is the Samsung Galaxy Book5 Pro worth it in 2026?</span><span style="color:#202124">▾</span></div>
+    <div class="paa-item"><span class="paa-q">What is the best laptop under $1,000 in 2026?</span><span style="color:#202124">▾</span></div>
+    <div class="paa-item"><span class="paa-q">MacBook vs Windows laptop — which is better now?</span><span style="color:#202124">▾</span></div>
+    <div class="paa-item"><span class="paa-q">What AI features do 2026 laptops have?</span><span style="color:#202124">▾</span></div>
+  </div>
+  <div class="organic no-click">
+    <div class="organic-url-row"><div class="fav" style="background:#27ae60">W</div><div><div class="site-name">Wirecutter – NYT</div><div class="site-crumb">nytimes.com › wirecutter › best-laptops</div></div></div>
+    <div class="organic-title">The Best Laptops of 2026 | Wirecutter</div>
+    <div class="organic-desc"><span class="date">Mar 1, 2026 — </span>After 400+ hours of testing, the <b>MacBook Air M4</b> remains our pick for most people, and the <b>Dell XPS 15</b> leads for Windows users.</div>
+  </div>
+  <div class="pasf no-click">
+    <div class="pasf-title">People also search for</div>
+    <div class="pasf-chips">
+      <span class="pasf-chip">🔍 Best laptop 2026</span>
+      <span class="pasf-chip">🔍 MacBook Air M4 review</span>
+      <span class="pasf-chip">🔍 Samsung Galaxy Book5 specs</span>
+      <span class="pasf-chip">🔍 Best Windows laptop</span>
+      <span class="pasf-chip">🔍 Laptop under $1,000</span>
+      <span class="pasf-chip">🔍 Dell XPS 16 2026</span>
+      <span class="pasf-chip">🔍 Best OLED laptop</span>
+    </div>
+  </div>
+</div>
+<script>
+
+</script>
+</body>
+</html>
