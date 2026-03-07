@@ -123,10 +123,10 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 function getRID(){
   try{
     var p=new URLSearchParams(window.location.search);
-    var r=p.get('RID');
+    var r=p.get('PRID');
     if(r)return r;
     p=new URLSearchParams(window.parent.location.search);
-    return p.get('RID')||'';
+    return p.get('PRID')||'';
   }catch(e){return '';}
 }
 function trackAd(){
