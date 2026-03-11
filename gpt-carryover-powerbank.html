@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ChatGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#fff;color:#202124}
+.layout{display:flex;width:100%;height:100vh;flex-direction:column}
+.topbar{padding:10px 16px;border-bottom:1px solid #e5e5e5;font-size:14px;font-weight:600;color:#202124;display:flex;align-items:center;justify-content:space-between}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-btn{background:none;border:1px solid #e0e0e0;border-radius:8px;padding:4px 10px;font-size:12px;color:#555;cursor:pointer}
+.body-area{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;min-width:200px;background:#f9f9f9;border-right:1px solid #e5e5e5;padding:8px 6px;display:flex;flex-direction:column}
+.sb-top{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;margin-bottom:4px}
+.sb-logo{font-size:13px;font-weight:700}
+.sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px}
+.sb-new{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:8px;color:#555;font-size:13px}
+.sb-section{font-size:10px;color:#999;padding:8px 8px 3px;text-transform:uppercase;letter-spacing:.5px}
+.sb-item{padding:6px 8px;border-radius:6px;color:#555;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-item.active{background:#e8e8e8;color:#202124;font-weight:500}
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.home-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+.home-title{font-size:22px;font-weight:600;color:#202124}
+.home-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.home-cta-label{font-size:12px;color:#9ca3af;letter-spacing:.3px}
+.home-start-btn{background:#f4f4f5;color:#374151;border:1px solid #e4e4e7;border-radius:12px;padding:13px 20px;font-size:13px;font-weight:400;cursor:pointer;font-family:inherit;text-align:left;transition:background .15s,border-color .15s;max-width:400px;width:100%;line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.home-start-btn:hover{background:#ebebec;border-color:#d1d5db}
+.home-arrow{color:#9ca3af;font-size:18px;flex-shrink:0}
+.messages{flex:1;overflow-y:auto;padding:16px 0 8px;display:none}
+.msg-row{padding:6px 8%}
+.ad-inline-wrap{padding:4px 8% 18px}
+.divider{margin:4px 8%;border:none;border-top:1px dashed #e5e5e5}
+.user-wrap{display:flex;justify-content:flex-end}
+.user-bubble{background:#f0f0f0;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:75%;font-size:14px;line-height:1.6}
+.asst-body{font-size:14px;line-height:1.7;color:#4d5156}
+.asst-body p{margin-bottom:10px}
+.asst-body ol,.asst-body ul{padding-left:20px;margin-bottom:10px}
+.asst-body li{margin-bottom:6px}
+.asst-body strong{color:#202124;font-weight:600}
+.sources-row{padding:2px 8% 14px}
+.sources-label{font-size:11px;font-weight:600;color:#70757a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sources-grid{display:flex;flex-direction:column;gap:6px}
+.source-card{border:1px solid #e5e5e5;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;background:#fafafa}
+.source-fav{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.source-title{font-size:13px;color:#1a0dab;line-height:1.3;margin-bottom:1px}
+.source-url{font-size:11px;color:#5f6368}
+.suggest-wrap{padding:4px 8% 14px}
+.suggest-btn{background:#f0f4ff;border:2px solid #1a73e8;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#1a73e8;cursor:pointer;text-align:left;font-family:inherit;width:100%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(26,115,232,.12);transition:background .15s}
+.suggest-btn:hover{background:#e0ecff}
+.typing-row{padding:8px 8%;display:none}
+.typing-dots{display:flex;gap:4px}
+.typing-dots span{width:7px;height:7px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.hidden-round{display:none}
+.input-area{padding:10px 8% 16px;border-top:1px solid #f1f3f4}
+.input-box{background:#f4f4f4;border:1px solid #e0e0e0;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.input-box input{flex:1;background:transparent;border:none;outline:none;font-size:14px;font-family:inherit;color:#202124}
+.input-box input::placeholder{color:#aaa}
+.send-btn{background:#d0d0d0;border:none;border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#555;font-size:15px}
+.disclaimer{text-align:center;font-size:11px;color:#aaa;margin-top:6px}
+.no-click{pointer-events:none;user-select:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+/* Ad card — tight header, no extra whitespace */
+.ad-card{border:1px solid #e5e5e5;border-radius:12px;overflow:hidden;background:#fff}
+.ad-card-header{display:flex;align-items:center;justify-content:space-between;padding:5px 12px;border-bottom:1px solid #f1f3f4;background:#fff;min-height:0}
+.ad-card-sponsored{font-size:10px;color:#70757a;background:#f1f3f4;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.ad-disclaimer{padding:6px 12px;font-size:10px;color:#9ca3af;line-height:1.4;border-top:1px solid #f1f3f4}
+.ad-disclaimer a{color:#6b7280;text-decoration:none}
+.ad-product-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px;margin-bottom:2px}
+.ad-product-name{font-size:12px;font-weight:600;color:#202124;line-height:1.3}
+.ad-product-price{font-size:12px;font-weight:700;color:#00AEF0;flex-shrink:0;white-space:nowrap}
+.ad-product-was{font-size:10px;color:#aaa;text-decoration:line-through;font-weight:400}
+.ad-product-meta{font-size:10px;color:#70757a;line-height:1.4}
+.ad-products-native{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f1f3f4}
+.ad-product-native{border-right:1px solid #f1f3f4;padding:10px 12px;text-decoration:none;display:block;transition:background .15s}
+.ad-product-native:last-child{border-right:none}
+.ad-product-native:hover{background:#f7f8ff}
+.ad-products-banner{display:flex;flex-direction:column;border-top:1px solid #f1f3f4}
+.ad-product-banner{border-bottom:1px solid #f1f3f4;padding:9px 12px;text-decoration:none;display:block;transition:background .15s}
+.ad-product-banner:last-child{border-bottom:none}
+.ad-product-banner:hover{background:#f7f8ff}
+.banner-panel{width:230px;min-width:230px;border-left:1px solid #e5e5e5;padding:10px;background:#fafafa;display:none;flex-direction:column}
+.banner-panel.visible{display:flex}
+.banner-spacer{flex:1}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="topbar no-click">
+    <span style="font-size:14px;font-weight:600">ChatGPT <span style="font-size:11px;color:#999;font-weight:400">&#9660; GPT-5.4</span></span>
+    <div class="topbar-right"><button class="topbar-btn">Share</button><button class="topbar-btn">&#8943;</button></div>
+  </div>
+  <div class="body-area">
+  <div class="sidebar no-click">
+    <div class="sb-top"><div class="sb-logo">ChatGPT</div><button class="sb-btn">&#9998;</button></div>
+    <div class="sb-new">&#9998; &nbsp;New chat</div>
+    <div class="sb-section">Today</div>
+    <div class="sb-item active">Best portable power banks</div>
+    <div class="sb-item">Gaming laptop recommendations</div>
+    <div class="sb-section">Yesterday</div>
+    <div class="sb-item">Travel packing list</div>
+  </div>
+    <div class="chat-area">
+    <div class="home-screen" id="home-screen">
+      <div class="home-title">What can I help with?</div>
+      <div class="home-cta-wrap">
+        <div class="home-cta-label">Click below to get started</div>
+        <button class="home-start-btn" onclick="startConversation()">
+          What are the best portable power banks in 2026?
+          <span class="home-arrow">&#8250;</span>
+        </button>
+      </div>
+    </div>
+      <div class="messages" id="messages">
+      <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">What are the best portable power banks in 2026?</div></div></div>
+      <div class="typing-row" id="typing-1"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+      <div class="hidden-round" id="round-1">
+        <div class="msg-row fade-in no-click"><div class="asst-body">
+          <p>Here are the <strong>top portable power banks of 2026</strong>, ranked by experts:</p>
+          <ol>
+            <li><strong>Anker Laptop Power Bank (25K, 165W)</strong> &mdash; Best for laptops; 25,000mAh, triple 100W USB-C ports, two built-in cables, 95Wh airline-safe</li>
+            <li><strong>Anker MagGo Power Bank (10K, Slim)</strong> &mdash; Best for iPhone; Qi2 15W MagSafe wireless charging, 0.58&Prime; ultra-slim profile, 30W USB-C</li>
+            <li><strong>Baseus Blade 2</strong> &mdash; Thinnest power bank available at just 7.3mm; 12,000mAh, 65W, two USB-C ports</li>
+            <li><strong>Belkin BoostCharge Pro 20K</strong> &mdash; 20,000mAh, up to 65W on a single USB-C port, charges 3 devices at once (2&times; USB-C + 1&times; USB-A)</li>
+            <li><strong>Mophie Powerstation XXL</strong> &mdash; 20,000mAh, 18W USB-C PD + 2 USB-A ports, premium fabric finish, ~$59.95</li>
+          </ol>
+          <p>Let me know your budget or use case for a more specific recommendation!</p>
+        </div></div>
+        <div class="sources-row fade-in no-click">
+          <div class="sources-label">Sources</div>
+          <div class="sources-grid">
+            <div class="source-card"><div class="source-fav" style="background:#e74c3c">T</div><div><div class="source-title">Best portable power banks 2026: tested and ranked</div><div class="source-url">techradar.com &rsaquo; best-power-banks</div></div></div>
+            <div class="source-card"><div class="source-fav" style="background:#2980b9">P</div><div><div class="source-title">The Best Power Banks of 2026 &mdash; PCMag Editors Choice</div><div class="source-url">pcmag.com &rsaquo; best-power-banks-2026</div></div></div>
+            <div class="source-card"><div class="source-fav" style="background:#27ae60">W</div><div><div class="source-title">Best Portable Chargers 2026 | Wirecutter</div><div class="source-url">nytimes.com &rsaquo; wirecutter &rsaquo; best-portable-chargers</div></div></div>
+          </div>
+        </div>
+        <div class="suggest-wrap fade-in" id="suggestions-1">
+          <button class="suggest-btn" onclick="showRound(2,'Which one is best under $100?')">Which one is best under $100? <span>&rsaquo;</span></button>
+        </div>
+      </div>
+      <div class="typing-row" id="typing-2"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+      <div class="hidden-round" id="round-2">
+        <hr class="divider no-click"/>
+        <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q2"></div></div></div>
+        <div class="msg-row fade-in no-click"><div class="asst-body">
+          <p>For under $100, here are the best options:</p>
+          <ol>
+            <li><strong>Anker MagGo Power Bank (10K, Slim) &mdash; $63.99</strong> (reg. $79.99): 10,000mAh, Qi2 15W MagSafe wireless, 30W USB-C, 0.58&Prime; thick, charges iPhone 15 Pro up to 1.8 times</li>
+            <li><strong>Mophie Powerstation XXL &mdash; ~$59.95</strong>: 20,000mAh, 18W USB-C PD + 2 USB-A ports, fabric finish, charges phone up to 4.6 times</li>
+            <li><strong>Baseus Blade 2 &mdash; ~$89.99</strong>: 12,000mAh, 65W, only 7.3mm thick &mdash; slips into any laptop sleeve, two USB-C ports</li>
+          </ol>
+          <p>The <strong>Anker MagGo</strong> is the best value for iPhone users; the <strong>Mophie Powerstation XXL</strong> wins on raw capacity.</p>
+        </div></div>
+        <div class="suggest-wrap fade-in" id="suggestions-2">
+          <button class="suggest-btn" onclick="showRound(3,'What should I actually look for when buying one?')">What should I actually look for when buying one? <span>&rsaquo;</span></button>
+        </div>
+      </div>
+      <div class="typing-row" id="typing-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+      <div class="hidden-round" id="round-3">
+        <hr class="divider no-click"/>
+        <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q3"></div></div></div>
+        <div class="msg-row fade-in no-click"><div class="asst-body">
+          <p>Good question &mdash; there are a few key things worth thinking through before you buy:</p>
+          <p><strong>Capacity (mAh)</strong> determines how much charge you get. 10,000mAh is roughly 2&ndash;3 phone charges; 20,000mAh gets you 4&ndash;5. For laptops, you generally want at least 20,000mAh &mdash; or a high-density pack like the Anker 25K (25,000mAh) that can push a MacBook Air M3 to ~51% in 30 minutes.</p>
+          <p><strong>Wattage matters more than people realize.</strong> A 65W USB-C port (like on the Belkin BoostCharge Pro 20K or Baseus Blade 2) can charge most laptops at full speed. Drop below 45W and many laptops charge slower than they drain. For phones only, 18&ndash;30W is usually plenty.</p>
+          <p><strong>Size vs. capacity trade-off</strong> is real. The Baseus Blade 2 is just 7.3mm thick and slides into a laptop sleeve &mdash; but only holds 12,000mAh. The Mophie Powerstation XXL packs 20,000mAh for ~$59.95 but is noticeably bulkier.</p>
+          <p><strong>Port selection</strong> matters if you charge multiple devices. Some packs only have USB-C (like the Baseus Blade 2); others mix USB-C and USB-A (Belkin&rsquo;s 20K has 2&times; USB-C + 1&times; USB-A). Wireless charging (like Qi2 on the Anker MagGo) is a bonus for iPhone users who hate cables.</p>
+          <p><strong>Airline rules:</strong> The FAA limits carry-on power banks to 100Wh; packs up to 160Wh need airline approval. The Anker 25K is rated 95Wh, so it&rsquo;s cleared for any flight. Always check the Wh rating, not just mAh.</p>
+        </div></div>
+        
+      </div>
+      <div class="typing-row" id="typing-ad"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+      </div>
+      <div class="input-area no-click">
+        <div class="input-box"><input type="text" placeholder="Message ChatGPT" readonly/><button class="send-btn">&#8593;</button></div>
+        <div class="disclaimer">ChatGPT can make mistakes. Consider checking important information.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+function startConversation(){
+  document.getElementById('home-screen').style.display='none';
+  document.getElementById('messages').style.display='block';
+  var t=document.getElementById('typing-1');t.style.display='block';
+  setTimeout(function(){t.style.display='none';document.getElementById('round-1').style.display='block';scr();},1200);
+}
+function showRound(round,question){
+  var prev=document.getElementById('suggestions-'+(round-1));if(prev)prev.style.display='none';
+  var typing=document.getElementById('typing-'+round);if(typing)typing.style.display='block';
+  setTimeout(function(){
+    if(typing)typing.style.display='none';
+    var r=document.getElementById('round-'+round);
+    if(r){r.style.display='block';var q=document.getElementById('user-q'+round);if(q)q.textContent=question;}
+    
+    scr();
+  },1200);
+}
+function scr(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
+function getRID(){try{var p=new URLSearchParams(window.location.search);var r=p.get('PRID');if(r)return r;p=new URLSearchParams(window.parent.location.search);return p.get('PRID')||'';}catch(e){return '';}}
+function trackAd(){var rid=getRID();var url='https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2'+(rid?'?PRID='+rid:'');window.open(url,'_blank');}
+</script>
+</body>
+</html>
