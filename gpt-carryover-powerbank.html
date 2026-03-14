@@ -14,12 +14,8 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 .body-area{display:flex;flex:1;overflow:hidden}
 .sidebar{width:44px;min-width:44px;background:#f9f9f9;border-right:1px solid #e5e5e5;padding:6px 4px;display:flex;flex-direction:column;align-items:center}
 .sb-top{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:4px}
-.sb-logo{font-size:11px;font-weight:700;display:none}
 .sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px}
 .sb-new{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;color:#555;font-size:15px}
-.sb-section{display:none}
-.sb-item{display:none}
-.sb-item.active{display:none}
 .chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .home-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
 .home-title{font-size:22px;font-weight:600;color:#202124}
@@ -65,28 +61,8 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 .no-click{pointer-events:none;user-select:none}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn .35s ease forwards}
-/* Ad card — tight header, no extra whitespace */
-.ad-card{border:1px solid #e5e5e5;border-radius:12px;overflow:hidden;background:#fff}
-.ad-card-header{display:flex;align-items:center;justify-content:space-between;padding:5px 12px;border-bottom:1px solid #f1f3f4;background:#fff;min-height:0}
-.ad-card-sponsored{font-size:10px;color:#70757a;background:#f1f3f4;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0}
-.ad-disclaimer{padding:6px 12px;font-size:10px;color:#9ca3af;line-height:1.4;border-top:1px solid #f1f3f4}
-.ad-disclaimer a{color:#6b7280;text-decoration:none}
-.ad-product-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px;margin-bottom:2px}
-.ad-product-name{font-size:12px;font-weight:600;color:#202124;line-height:1.3}
-.ad-product-price{font-size:12px;font-weight:700;color:#00AEF0;flex-shrink:0;white-space:nowrap}
-.ad-product-was{font-size:10px;color:#aaa;text-decoration:line-through;font-weight:400}
-.ad-product-meta{font-size:10px;color:#70757a;line-height:1.4}
-.ad-products-native{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f1f3f4}
-.ad-product-native{border-right:1px solid #f1f3f4;padding:10px 12px;text-decoration:none;display:block;transition:background .15s}
-.ad-product-native:last-child{border-right:none}
-.ad-product-native:hover{background:#f7f8ff}
-.ad-products-banner{display:flex;flex-direction:column;border-top:1px solid #f1f3f4}
-.ad-product-banner{border-bottom:1px solid #f1f3f4;padding:9px 12px;text-decoration:none;display:block;transition:background .15s}
-.ad-product-banner:last-child{border-bottom:none}
-.ad-product-banner:hover{background:#f7f8ff}
-.banner-panel{width:230px;min-width:230px;border-left:1px solid #e5e5e5;padding:10px;background:#fafafa;display:none;flex-direction:column}
-.banner-panel.visible{display:flex}
-.banner-spacer{flex:1}
+
+
 </style>
 </head>
 <body>
@@ -96,89 +72,101 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
     <div class="topbar-right"><button class="topbar-btn">Share</button><button class="topbar-btn">&#8943;</button></div>
   </div>
   <div class="body-area">
-  <div class="sidebar no-click">
-    <div class="sb-top"><button class="sb-btn">&#9776;</button><button class="sb-btn">&#9998;</button></div>
-    <div class="sb-new">&#9998;</div>
-  </div>
-    <div class="chat-area">
-    <div class="home-screen" id="home-screen">
-      <div class="home-title">What can I help with?</div>
-      <div class="home-cta-wrap">
-        <div class="home-cta-label">Click below to get started</div>
-        <button class="home-start-btn" onclick="startConversation()">
-          What are the best portable power banks in 2026?
-          <span class="home-arrow">&#8250;</span>
-        </button>
-      </div>
+    <div class="sidebar no-click">
+      <div class="sb-top"><button class="sb-btn">&#9776;</button><button class="sb-btn">&#9998;</button></div>
+      <div class="sb-new">&#9998;</div>
     </div>
+    <div class="chat-area">
+
+      <!-- HOME SCREEN -->
+      <div class="home-screen" id="home-screen">
+        <div class="home-title">What can I help with?</div>
+        <div class="home-cta-wrap">
+          <div class="home-cta-label">Click below to get started</div>
+          <button class="home-start-btn" onclick="startConversation()">
+            What are the best portable power banks in 2026?
+            <span class="home-arrow">&#8250;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
       <div class="messages" id="messages">
-      <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">What are the best portable power banks in 2026?</div></div></div>
-      <div class="typing-row" id="typing-1"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-      <div class="hidden-round" id="round-1">
-        <div class="msg-row fade-in no-click"><div class="asst-body">
-          <p>Here are the <strong>top portable power banks of 2026</strong>, ranked by experts:</p>
-          <ol>
-            <li><strong>Anker Laptop Power Bank (25K, 165W)</strong> &mdash; Best for laptops; 25,000mAh, triple 100W USB-C ports, two built-in cables, 95Wh airline-safe</li>
-            <li><strong>Anker MagGo Power Bank (10K, Slim)</strong> &mdash; Best for iPhone; Qi2 15W MagSafe wireless charging, 0.58&Prime; ultra-slim profile, 30W USB-C</li>
-            <li><strong>Baseus Blade 2</strong> &mdash; Thinnest power bank available at just 7.3mm; 12,000mAh, 65W, two USB-C ports</li>
-            <li><strong>Belkin BoostCharge Pro 20K</strong> &mdash; 20,000mAh, up to 65W on a single USB-C port, charges 3 devices at once (2&times; USB-C + 1&times; USB-A)</li>
-            <li><strong>Mophie Powerstation XXL</strong> &mdash; 20,000mAh, 18W USB-C PD + 2 USB-A ports, premium fabric finish, ~$59.95</li>
-          </ol>
-          <p>Let me know your budget or use case for a more specific recommendation!</p>
-        </div></div>
-        <div class="sources-row fade-in no-click">
-          <div class="sources-label">Sources</div>
-          <div class="sources-grid">
-            <div class="source-card"><div class="source-fav" style="background:#e74c3c">T</div><div><div class="source-title">Best portable power banks 2026: tested and ranked</div><div class="source-url">techradar.com &rsaquo; best-power-banks</div></div></div>
-            <div class="source-card"><div class="source-fav" style="background:#2980b9">P</div><div><div class="source-title">The Best Power Banks of 2026 &mdash; PCMag Editors Choice</div><div class="source-url">pcmag.com &rsaquo; best-power-banks-2026</div></div></div>
-            <div class="source-card"><div class="source-fav" style="background:#27ae60">W</div><div><div class="source-title">Best Portable Chargers 2026 | Wirecutter</div><div class="source-url">nytimes.com &rsaquo; wirecutter &rsaquo; best-portable-chargers</div></div></div>
+
+        <!-- ── ROUND 1 ── -->
+        <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">What are the best portable power banks in 2026?</div></div></div>
+        <div class="typing-row" id="typing-1"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-1">
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>Here are the <strong>top portable power banks of 2026</strong>, ranked by experts:</p>
+            <ol>
+              <li><strong>Anker Prime Power Bank (26K, 300W)</strong> &mdash; Best for power users; 26,250mAh capacity, up to 300W output, supports 150W pogo-pin fast-charging when paired with the Anker Prime Charging Base</li>
+              <li><strong>Mophie Powerstation Ultra 25K</strong> &mdash; Best for laptop travelers; 25,000mAh, 140W USB-C PD, three USB-C ports (140W + 100W + 100W), fully charges a MacBook Pro, premium anodized aluminum build</li>
+              <li><strong>Baseus EnerGeek GR11</strong> &mdash; Best built-in cable option; 20,000mAh, 145W total output, integrated 100W retractable USB-C cable (1.97 ft), charges up to four devices simultaneously, TFT display</li>
+              <li><strong>Anker MagGo Power Bank (10K, Slim)</strong> &mdash; Best for iPhone; Qi2-certified 15W MagSafe wireless charging, 0.58&Prime; slim profile, 30W USB-C wired output</li>
+              <li><strong>Belkin BoostCharge Pro 20K</strong> &mdash; Best all-rounder under $70; 20,000mAh, up to 65W USB-C, 2&times; USB-C + 1&times; USB-A, compact design</li>
+            </ol>
+            <p>Let me know your budget or use case for a more specific recommendation!</p>
+          </div></div>
+          <div class="sources-row fade-in no-click">
+            <div class="sources-label">Sources</div>
+            <div class="sources-grid">
+              <div class="source-card"><div class="source-fav" style="background:#e74c3c">T</div><div><div class="source-title">Best portable power banks 2026: tested and ranked</div><div class="source-url">techradar.com &rsaquo; best-power-banks</div></div></div>
+              <div class="source-card"><div class="source-fav" style="background:#2980b9">P</div><div><div class="source-title">The Best Power Banks of 2026 &mdash; PCMag Editors Choice</div><div class="source-url">pcmag.com &rsaquo; best-power-banks-2026</div></div></div>
+              <div class="source-card"><div class="source-fav" style="background:#27ae60">W</div><div><div class="source-title">Best Portable Chargers 2026 | Wirecutter</div><div class="source-url">nytimes.com &rsaquo; wirecutter &rsaquo; best-portable-chargers</div></div></div>
+            </div>
+          </div>
+          <div class="suggest-wrap fade-in" id="suggestions-1">
+            <button class="suggest-btn" onclick="showRound(2,'What should I actually look for when buying one?')">What should I actually look for when buying one? <span>&rsaquo;</span></button>
           </div>
         </div>
-        <div class="suggest-wrap fade-in" id="suggestions-1">
-          <button class="suggest-btn" onclick="showRound(2,'Which one is best under $100?')">Which one is best under $100? <span>&rsaquo;</span></button>
+
+        <!-- ── ROUND 2 (buying guide — moved earlier) ── -->
+        <div class="typing-row" id="typing-2"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-2">
+          <hr class="divider no-click"/>
+          <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q2"></div></div></div>
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>Good question &mdash; there are a few key things worth thinking through before you buy:</p>
+            <p><strong>Capacity (mAh)</strong> determines how much charge you get. 10,000mAh gives roughly 2&ndash;3 phone charges; 20,000mAh gets you 4&ndash;5. For laptops, you generally want at least 20,000mAh. The Mophie Powerstation Ultra 25K (25,000mAh) can fully charge a MacBook Pro, while the Baseus EnerGeek GR11 (20,000mAh) can charge a laptop once or a phone up to five times.</p>
+            <p><strong>Wattage matters more than most people realize.</strong> A 100W+ USB-C port &mdash; like the 140W on the Mophie Ultra 25K or the 145W total on the Baseus GR11 &mdash; can charge most laptops at full speed. Drop below 45W and many laptops charge slower than they drain during use. For phones only, 18&ndash;30W is usually plenty.</p>
+            <p><strong>Built-in cables are a game-changer for travelers.</strong> The Baseus EnerGeek GR11 has an integrated 100W retractable USB-C cable (1.97 ft) that pulls out and snaps back without tangling &mdash; one less cable to forget. Most other power banks require you to carry a separate cable.</p>
+            <p><strong>Port selection matters if you charge multiple devices.</strong> Some packs have only USB-C; others mix USB-C and USB-A. The Baseus GR11 supports up to four devices at once (3&times; USB-C + 1&times; USB-A). A dedicated home charging dock like the Anker Prime 150W Charging Base adds three additional ports (140W + 100W USB-C + 22.5W USB-A) while simultaneously fast-charging a compatible Anker Prime power bank via pogo pins.</p>
+            <p><strong>Airline rules:</strong> The FAA limits carry-on power banks to 100Wh; packs 100&ndash;160Wh need explicit airline approval. Both the Mophie Ultra 25K (~92Wh) and the Baseus GR11 (74Wh) fall comfortably under the 100Wh threshold &mdash; no approval needed. Always check the Wh rating on the label, not just mAh.</p>
+          </div></div>
+          <div class="suggest-wrap fade-in" id="suggestions-2">
+            <button class="suggest-btn" onclick="showRound(3,'Which one is best under $100?')">Which one is best under $100? <span>&rsaquo;</span></button>
+          </div>
         </div>
-      </div>
-      <div class="typing-row" id="typing-2"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-      <div class="hidden-round" id="round-2">
-        <hr class="divider no-click"/>
-        <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q2"></div></div></div>
-        <div class="msg-row fade-in no-click"><div class="asst-body">
-          <p>For under $100, here are the best options:</p>
-          <ol>
-            <li><strong>Anker MagGo Power Bank (10K, Slim) &mdash; $63.99</strong> (reg. $79.99): 10,000mAh, Qi2 15W MagSafe wireless, 30W USB-C, 0.58&Prime; thick, charges iPhone 15 Pro up to 1.8 times</li>
-            <li><strong>Mophie Powerstation XXL &mdash; ~$59.95</strong>: 20,000mAh, 18W USB-C PD + 2 USB-A ports, fabric finish, charges phone up to 4.6 times</li>
-            <li><strong>Baseus Blade 2 &mdash; ~$89.99</strong>: 12,000mAh, 65W, only 7.3mm thick &mdash; slips into any laptop sleeve, two USB-C ports</li>
-          </ol>
-          <p>The <strong>Anker MagGo</strong> is the best value for iPhone users; the <strong>Mophie Powerstation XXL</strong> wins on raw capacity.</p>
-        </div></div>
-        <div class="suggest-wrap fade-in" id="suggestions-2">
-          <button class="suggest-btn" onclick="showRound(3,'What should I actually look for when buying one?')">What should I actually look for when buying one? <span>&rsaquo;</span></button>
+
+        <!-- ── ROUND 3 (product recommendations — moved to last) ── -->
+        <div class="typing-row" id="typing-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-3">
+          <hr class="divider no-click"/>
+          <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q3"></div></div></div>
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>For under $100, here are the top three picks &mdash; each best for a different kind of user:</p>
+            <ol>
+              <li><strong>Mophie Powerstation Ultra 25K &mdash; $99.95</strong>: 25,000mAh, three USB-C ports (140W + 100W + 100W), fully charges a MacBook Pro or up to 5&times; phones, premium anodized aluminum with silicone endcaps, LED charge indicator, 2-year warranty. Best for: laptop users who want max capacity.</li>
+              <li><strong>Baseus EnerGeek GR11 &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), 145W total output, built-in 100W retractable USB-C cable, quad-device charging (3&times; USB-C + 1&times; USB-A), 1.2-inch TFT display, 3-layer cooling. Charges a MacBook Pro 16&Prime; to 43% in 30 minutes. Best for: travelers who want cable-free convenience.</li>
+              <li><strong>Anker Prime 150W Charging Base &mdash; $99.99</strong>: Desktop fast-charging dock for Anker Prime power banks; 150W pogo-pin output (Prime bank to 50% in 21 min), plus 140W USB-C + 100W USB-C + 22.5W USB-A ports for other devices (max 150W combined), Bluetooth + Wi-Fi, Anker app with real-time stats, ActiveShield 4.0 safety monitoring. Best for: Anker Prime ecosystem users who want the fastest possible home recharging.</li>
+            </ol>
+            <p>The <strong>Mophie</strong> wins on raw capacity; the <strong>Baseus</strong> is the most travel-friendly with its built-in cable; the <strong>Anker Prime base</strong> is the fastest way to recharge a Prime power bank at home.</p>
+          </div></div>
+
+
         </div>
-      </div>
-      <div class="typing-row" id="typing-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-      <div class="hidden-round" id="round-3">
-        <hr class="divider no-click"/>
-        <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q3"></div></div></div>
-        <div class="msg-row fade-in no-click"><div class="asst-body">
-          <p>Good question &mdash; there are a few key things worth thinking through before you buy:</p>
-          <p><strong>Capacity (mAh)</strong> determines how much charge you get. 10,000mAh is roughly 2&ndash;3 phone charges; 20,000mAh gets you 4&ndash;5. For laptops, you generally want at least 20,000mAh &mdash; or a high-density pack like the Anker 25K (25,000mAh) that can push a MacBook Air M3 to ~51% in 30 minutes.</p>
-          <p><strong>Wattage matters more than people realize.</strong> A 65W USB-C port (like on the Belkin BoostCharge Pro 20K or Baseus Blade 2) can charge most laptops at full speed. Drop below 45W and many laptops charge slower than they drain. For phones only, 18&ndash;30W is usually plenty.</p>
-          <p><strong>Size vs. capacity trade-off</strong> is real. The Baseus Blade 2 is just 7.3mm thick and slides into a laptop sleeve &mdash; but only holds 12,000mAh. The Mophie Powerstation XXL packs 20,000mAh for ~$59.95 but is noticeably bulkier.</p>
-          <p><strong>Port selection</strong> matters if you charge multiple devices. Some packs only have USB-C (like the Baseus Blade 2); others mix USB-C and USB-A (Belkin&rsquo;s 20K has 2&times; USB-C + 1&times; USB-A). Wireless charging (like Qi2 on the Anker MagGo) is a bonus for iPhone users who hate cables.</p>
-          <p><strong>Airline rules:</strong> The FAA limits carry-on power banks to 100Wh; packs up to 160Wh need airline approval. The Anker 25K is rated 95Wh, so it&rsquo;s cleared for any flight. Always check the Wh rating, not just mAh.</p>
-        </div></div>
-        
-      </div>
-      <div class="typing-row" id="typing-ad"><div class="typing-dots"><span></span><span></span><span></span></div></div>
-      </div>
+
+      </div><!-- /messages -->
+
       <div class="input-area no-click">
         <div class="input-box"><input type="text" placeholder="Message ChatGPT" readonly/><button class="send-btn">&#8593;</button></div>
         <div class="disclaimer">ChatGPT can make mistakes. Consider checking important information.</div>
       </div>
-    </div>
+    </div><!-- /chat-area -->
+  </div><!-- /body-area -->
+</div><!-- /layout -->
 
-  </div>
-</div>
 <script>
 function startConversation(){
   document.getElementById('home-screen').style.display='none';
@@ -193,7 +181,6 @@ function showRound(round,question){
     if(typing)typing.style.display='none';
     var r=document.getElementById('round-'+round);
     if(r){r.style.display='block';var q=document.getElementById('user-q'+round);if(q)q.textContent=question;}
-    
     scr();
   },1200);
 }
