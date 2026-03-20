@@ -39,7 +39,12 @@
   /* ── HEADER ── */
   header {
     border-bottom: 1px solid #e5e7eb;
-    padding: 11px 32px;
+    padding: 11px 0;
+  }
+  .header-inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 24px;
     display: flex; align-items: center;
   }
   .anker-logo {
@@ -49,9 +54,14 @@
 
   /* ── BREADCRUMB ── */
   .breadcrumb {
-    padding: 8px 32px;
+    padding: 8px 0;
     font-size: 12px; color: #888;
     border-bottom: 1px solid #f0f0f0;
+  }
+  .breadcrumb-inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
   .breadcrumb a { color: #555; text-decoration: none; }
   .breadcrumb a:hover { color: #00AEF0; }
@@ -182,7 +192,9 @@
 <body>
 
 <header>
-  <div class="anker-logo">ANKER</div>
+  <div class="header-inner">
+    <div class="anker-logo">ANKER</div>
+  </div>
 </header>
 
 <div id="reminder">
@@ -191,7 +203,9 @@
 </div>
 
 <div class="breadcrumb">
-  <a href="#">Home</a> &rsaquo; <a href="#">Charging</a> &rsaquo; <a href="#">Power Banks &amp; Bases</a> &rsaquo; Anker Prime Charging Base
+  <div class="breadcrumb-inner">
+    <a href="#">Home</a> &rsaquo; <a href="#">Charging</a> &rsaquo; <a href="#">Power Banks &amp; Bases</a> &rsaquo; Anker Prime Charging Base
+  </div>
 </div>
 
 <div class="product-page">
