@@ -207,7 +207,7 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
   <div class="ba-body">
     <div class="ba-title">Anker Prime 150W Charging Base</div>
     <div class="ba-meta">In stock &bull; $99.99 &bull; Charges Prime bank to 50% in 21 min</div>
-    <a class="ba-cta" href="javascript:void(0);" onclick="Qualtrics.SurveyEngine.setEmbeddedData('ShopNowClicked','1'); document.getElementById('NextButton').click();" style="cursor:pointer">Shop Now</a>
+    <a class="ba-cta" href="javascript:void(0);" onclick="window.parent.postMessage({type:'shopNowClicked'},'*');" style="cursor:pointer">Shop Now</a>
   </div>
 </div>
 
@@ -260,8 +260,7 @@ function toggleBannerMenu(e){
 
 function dismissBannerAd(reason){
   try{
-    Qualtrics.SurveyEngine.setEmbeddedData('AdDismissed','1');
-    Qualtrics.SurveyEngine.setEmbeddedData('AdDismissReason',reason);
+    window.parent.postMessage({type:'adDismissed',reason:reason},'*');
   }catch(e){}
 
   document.getElementById('ba-menu-dropdown').style.display='none';
