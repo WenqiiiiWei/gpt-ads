@@ -183,7 +183,18 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
     </div><!-- /chat-area -->
     <div class="ad-rail">
 <div id="banner-ad">
-  <div class="ba-close"><button onclick="document.getElementById('banner-ad').style.display='none'">&times;</button></div>
+  <div class="ba-close" style="position:relative">
+    <button id="ba-menu-btn" onclick="toggleBannerMenu(event)" style="background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1;padding:2px 4px">&#8943;</button>
+    <div id="ba-menu-dropdown" style="display:none;position:absolute;top:24px;right:0;width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1);z-index:999;padding:4px 0;font-size:12px;font-weight:400;color:#333">
+      <div onclick="dismissBannerAd('not_interested')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not interested</div>
+      <div onclick="dismissBannerAd('not_relevant')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not relevant to me</div>
+      <div onclick="dismissBannerAd('seen_too_often')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Seen this too often</div>
+      <div onclick="dismissBannerAd('covers_content')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Covers content</div>
+      <div onclick="dismissBannerAd('inappropriate')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Inappropriate</div>
+      <div style="border-top:1px solid #eee;margin:2px 0"></div>
+      <div onclick="dismissBannerAd('report_ad')" style="padding:8px 14px;cursor:pointer;color:#c00;transition:background .1s" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">Report this ad</div>
+    </div>
+  </div>
   <div class="ba-header">
     <div class="ba-logo">A</div>
     <div>
@@ -196,7 +207,7 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
   <div class="ba-body">
     <div class="ba-title">Anker Prime 150W Charging Base</div>
     <div class="ba-meta">In stock &bull; $99.99 &bull; Charges Prime bank to 50% in 21 min</div>
-    <a class="ba-cta" href="https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2" onclick="trackAd();return false;">Shop Now</a>
+    <a class="ba-cta" href="javascript:void(0);" onclick="Qualtrics.SurveyEngine.setEmbeddedData('ShopNowClicked','1'); document.getElementById('NextButton').click();" style="cursor:pointer">Shop Now</a>
   </div>
 </div>
 
@@ -239,8 +250,45 @@ function showRound(round,question){
   },1200);
 }
 function scr(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
-function getRID(){try{var p=new URLSearchParams(window.location.search);var r=p.get('PRID');if(r)return r;p=new URLSearchParams(window.parent.location.search);return p.get('PRID')||'';}catch(e){return '';}}
-function trackAd(){var rid=getRID();var url='https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2'+(rid?'?PRID='+rid:'');window.open(url,'_blank');}
+
+/* ── Banner Ad Menu Functions ── */
+function toggleBannerMenu(e){
+  e.stopPropagation();
+  var menu=document.getElementById('ba-menu-dropdown');
+  menu.style.display=(menu.style.display==='none')?'block':'none';
+}
+
+function dismissBannerAd(reason){
+  try{
+    Qualtrics.SurveyEngine.setEmbeddedData('AdDismissed','1');
+    Qualtrics.SurveyEngine.setEmbeddedData('AdDismissReason',reason);
+  }catch(e){}
+
+  document.getElementById('ba-menu-dropdown').style.display='none';
+
+  var adContainer=document.getElementById('banner-ad');
+  var reasonLabels={
+    'not_interested':'Not interested',
+    'not_relevant':'Not relevant to me',
+    'seen_too_often':'Seen this too often',
+    'covers_content':'Covers content',
+    'inappropriate':'Inappropriate',
+    'report_ad':'Reported'
+  };
+  var label=reasonLabels[reason]||reason;
+  adContainer.innerHTML='<div style="padding:30px 16px;text-align:center">'
+    +'<div style="font-size:13px;color:#70757a;margin-bottom:4px">Ad removed</div>'
+    +'<div style="font-size:11px;color:#9ca3af">Reason: '+label+'</div>'
+    +'<div style="font-size:11px;color:#9ca3af;margin-top:8px">We\'ll try to show more relevant content.</div>'
+    +'</div>';
+}
+
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('ba-menu-dropdown');
+  if(menu && menu.style.display==='block'){
+    menu.style.display='none';
+  }
+});
 </script>
 </body>
 </html>
