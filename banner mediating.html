@@ -115,12 +115,13 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 /* Align banner ad so its bottom lines up with the bottom of the grey conversation text */
 function alignAd(){
   var ad=document.getElementById('banner-ad');
-  var msgs=document.getElementById('messages');
+  var greyRound=document.querySelector('.grey-round');
   var rail=document.querySelector('.ad-rail');
-  if(!ad||!msgs||!rail) return;
-  var msgsRect=msgs.getBoundingClientRect();
+  if(!ad||!greyRound||!rail) return;
+  var greyRect=greyRound.getBoundingClientRect();
   var railRect=rail.getBoundingClientRect();
-  var contentBottom=msgsRect.bottom-railRect.top;
+  /* bottom of actual grey text content relative to rail top */
+  var contentBottom=greyRect.bottom-railRect.top;
   var adH=ad.offsetHeight;
   var topVal=contentBottom-adH;
   ad.style.top=Math.max(0,topVal)+'px';
