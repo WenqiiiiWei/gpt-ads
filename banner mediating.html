@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ChatGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#fff;color:#202124}
+.layout{display:flex;width:100%;height:100vh;flex-direction:column}
+.topbar{padding:7px 12px;padding-right:232px;border-bottom:1px solid #e5e5e5;font-size:14px;font-weight:600;color:#202124;display:flex;align-items:center;justify-content:space-between}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-btn{background:none;border:1px solid #e0e0e0;border-radius:8px;padding:4px 10px;font-size:12px;color:#555;cursor:pointer}
+.body-area{display:flex;flex:1;overflow:hidden}
+.sidebar{width:44px;min-width:44px;background:#f9f9f9;border-right:1px solid #e5e5e5;padding:6px 4px;display:flex;flex-direction:column;align-items:center}
+.sb-top{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:4px}
+.sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px}
+.sb-new{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;color:#555;font-size:15px}
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.messages{flex:1;overflow-y:auto;padding:16px 0 0;display:flex;flex-direction:column}
+.msg-row{padding:6px 8%}
+.user-wrap{display:flex;justify-content:flex-end}
+.user-bubble{background:#f0f0f0;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:75%;font-size:14px;line-height:1.6}
+.asst-body{font-size:14px;line-height:1.7;color:#4d5156}
+.asst-body p{margin-bottom:10px}
+.asst-body ol,.asst-body ul{padding-left:20px;margin-bottom:10px}
+.asst-body li{margin-bottom:6px}
+.asst-body strong{color:#202124;font-weight:600}
+.no-click{pointer-events:none;user-select:none}
+/* ── Grey-out for conversation rounds ── */
+.grey-round .msg-row{opacity:.45;filter:grayscale(60%)}
+/* ── Ad rail layout ── */
+.ad-rail{width:220px;min-width:220px;background:#f3f4f6;border-left:1px solid #e5e7eb;flex-shrink:0;position:relative}
+#banner-ad{position:absolute;left:0;right:0;background:#fff;border-bottom:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#banner-ad .ba-close{display:flex;justify-content:flex-end;padding:6px 8px 0}
+#banner-ad .ba-close button{background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1}
+#banner-ad .ba-header{display:flex;align-items:center;gap:8px;padding:6px 12px}
+#banner-ad .ba-logo{width:28px;height:28px;border-radius:7px;background:#00AEF0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+#banner-ad .ba-brand{font-size:12px;font-weight:600;color:#202124}
+#banner-ad .ba-sponsored{font-size:10px;color:#70757a}
+#banner-ad .ba-img-wrap{width:100%;height:150px;overflow:hidden;background:#f5f5f7;display:block}
+#banner-ad .ba-img{width:100%;height:150px;object-fit:contain;background:#f5f5f7;display:block;padding:0;transform:scale(1.35)}
+#banner-ad .ba-body{padding:10px 12px 6px}
+#banner-ad .ba-title{font-size:12px;font-weight:600;color:#202124;margin-bottom:3px}
+#banner-ad .ba-meta{font-size:11px;color:#5f6368;margin-bottom:10px}
+#banner-ad .ba-cta{display:block;background:#00AEF0;color:#fff;text-align:center;font-size:13px;font-weight:600;padding:9px;border-radius:8px;text-decoration:none;margin-bottom:10px;font-family:inherit;pointer-events:none;cursor:default}
+#banner-ad .ba-desc{font-size:13px;color:#4d5156;padding:6px 12px 4px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="topbar no-click">
+    <span style="font-size:14px;font-weight:600">ChatGPT <span style="font-size:11px;color:#999;font-weight:400">&#9660; GPT-5.4</span></span>
+    <div class="topbar-right"><button class="topbar-btn">Share</button><button class="topbar-btn">&#8943;</button></div>
+  </div>
+  <div class="body-area">
+    <div class="sidebar no-click">
+      <div class="sb-top"><button class="sb-btn">&#9776;</button><button class="sb-btn">&#9998;</button></div>
+      <div class="sb-new">&#9998;</div>
+    </div>
+    <div class="chat-area">
+
+      <!-- MESSAGES — only Round 3 visible, greyed out -->
+      <div class="messages" id="messages">
+        <div class="grey-round">
+          <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">Which one is best under $100?</div></div></div>
+          <div class="msg-row no-click"><div class="asst-body">
+            <p>For under $100, here are the top three picks &mdash; each best for a different kind of user:</p>
+            <ol>
+              <li><strong>Mophie Powerstation Ultra 25K &mdash; $99.99</strong>: 25,000mAh, three USB-C ports (140W + 100W + 100W), fully charges a MacBook Pro or up to 5&times; phones, premium anodized aluminum with silicone endcaps, LED charge indicator, 2-year warranty. Best for: laptop users who want max capacity.</li>
+              <li><strong>Baseus EnerGeek GR11 &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), 145W total output, built-in 100W retractable USB-C cable, quad-device charging (3&times; USB-C + 1&times; USB-A), 1.2-inch TFT display, 3-layer cooling. Charges a MacBook Pro 16&Prime; to 43% in 30 minutes. Best for: travelers who want cable-free convenience.</li>
+              <li><strong>Anker Prime 150W Charging Base &mdash; $99.99</strong>: Desktop fast-charging dock for Anker Prime power banks; 150W pogo-pin output (Prime bank to 50% in 21 min), plus 140W USB-C + 100W USB-C + 22.5W USB-A ports for other devices (max 150W combined), Bluetooth + Wi-Fi, Anker app with real-time stats, ActiveShield 4.0 safety monitoring. Best for: Anker Prime ecosystem users who want the fastest possible home recharging.</li>
+            </ol>
+            <p>The <strong>Mophie</strong> wins on raw capacity; the <strong>Baseus</strong> is the most travel-friendly with its built-in cable; the <strong>Anker Prime base</strong> is the fastest way to recharge a Prime power bank at home.</p>
+          </div></div>
+        </div>
+      </div><!-- /messages -->
+
+    </div><!-- /chat-area -->
+    <div class="ad-rail">
+<div id="banner-ad">
+  <div class="ba-close" style="position:relative">
+    <button id="ba-menu-btn" onclick="toggleBannerMenu(event)" style="background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1;padding:2px 4px">&#8943;</button>
+    <div id="ba-menu-dropdown" style="display:none;position:absolute;top:24px;right:0;width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1);z-index:999;padding:4px 0;font-size:12px;font-weight:400;color:#333">
+      <div onclick="dismissBannerAd('not_interested')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not interested</div>
+      <div onclick="dismissBannerAd('not_relevant')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not relevant to me</div>
+      <div onclick="dismissBannerAd('seen_too_often')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Seen this too often</div>
+      <div onclick="dismissBannerAd('covers_content')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Covers content</div>
+      <div onclick="dismissBannerAd('inappropriate')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Inappropriate</div>
+      <div style="border-top:1px solid #eee;margin:2px 0"></div>
+      <div onclick="dismissBannerAd('report_ad')" style="padding:8px 14px;cursor:pointer;color:#c00;transition:background .1s" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">Report this ad</div>
+    </div>
+  </div>
+  <div class="ba-header">
+    <div class="ba-logo">A</div>
+    <div>
+      <div class="ba-brand">Anker</div>
+      <div class="ba-sponsored">Sponsored</div>
+    </div>
+  </div>
+  <div class="ba-desc">Charge your Anker Prime power bank faster at home.</div>
+  <div class="ba-img-wrap"><img class="ba-img" src="https://universityofhouston.co1.qualtrics.com/ControlPanel/Graphic.php?IM=IM_dWOYFXzNSvDZ2pS" alt="Anker Prime 150W Charging Base"/></div>
+  <div class="ba-body">
+    <div class="ba-title">Anker Prime 150W Charging Base</div>
+    <div class="ba-meta">In stock &bull; $99.99 &bull; Charges Prime bank to 50% in 21 min</div>
+    <div class="ba-cta">Shop Now</div>
+  </div>
+</div>
+
+    </div>
+  </div><!-- /body-area -->
+</div><!-- /layout -->
+
+<script>
+/* Align banner ad so its bottom lines up with the bottom of the grey conversation text */
+function alignAd(){
+  var ad=document.getElementById('banner-ad');
+  var msgs=document.getElementById('messages');
+  var rail=document.querySelector('.ad-rail');
+  if(!ad||!msgs||!rail) return;
+  var msgsRect=msgs.getBoundingClientRect();
+  var railRect=rail.getBoundingClientRect();
+  var contentBottom=msgsRect.bottom-railRect.top;
+  var adH=ad.offsetHeight;
+  var topVal=contentBottom-adH;
+  ad.style.top=Math.max(0,topVal)+'px';
+}
+alignAd();
+window.addEventListener('load',function(){alignAd();setTimeout(alignAd,300);});
+window.addEventListener('resize',alignAd);
+
+/* ── Banner Ad Menu Functions ── */
+function toggleBannerMenu(e){
+  e.stopPropagation();
+  var menu=document.getElementById('ba-menu-dropdown');
+  menu.style.display=(menu.style.display==='none')?'block':'none';
+}
+
+function dismissBannerAd(reason){
+  try{
+    window.parent.postMessage({type:'adDismissed',reason:reason},'*');
+  }catch(e){}
+
+  document.getElementById('ba-menu-dropdown').style.display='none';
+
+  var adContainer=document.getElementById('banner-ad');
+  var reasonLabels={
+    'not_interested':'Not interested',
+    'not_relevant':'Not relevant to me',
+    'seen_too_often':'Seen this too often',
+    'covers_content':'Covers content',
+    'inappropriate':'Inappropriate',
+    'report_ad':'Reported'
+  };
+  var label=reasonLabels[reason]||reason;
+  adContainer.innerHTML='<div style="padding:30px 16px;text-align:center">'
+    +'<div style="font-size:13px;color:#70757a;margin-bottom:4px">Ad removed</div>'
+    +'<div style="font-size:11px;color:#9ca3af">Reason: '+label+'</div>'
+    +'<div style="font-size:11px;color:#9ca3af;margin-top:8px">We\'ll try to show more relevant content.</div>'
+    +'</div>';
+}
+
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('ba-menu-dropdown');
+  if(menu && menu.style.display==='block'){
+    menu.style.display='none';
+  }
+});
+</script>
+</body>
+</html>
