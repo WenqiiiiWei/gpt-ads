@@ -16,8 +16,10 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 .sb-top{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:4px}
 .sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px}
 .sb-new{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;color:#555;font-size:15px}
-.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.messages{flex:1;overflow-y:auto;padding:16px 0 0;display:flex;flex-direction:column}
+/* KEY: content-row uses flex-start so columns are only as tall as their content */
+.content-row{display:flex;flex:1;align-items:flex-start;overflow-y:auto}
+.chat-area{flex:1;display:flex;flex-direction:column}
+.messages{padding:16px 0 0;display:flex;flex-direction:column}
 .msg-row{padding:6px 8%}
 .user-wrap{display:flex;justify-content:flex-end}
 .user-bubble{background:#f0f0f0;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:75%;font-size:14px;line-height:1.6}
@@ -27,11 +29,12 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 .asst-body li{margin-bottom:6px}
 .asst-body strong{color:#202124;font-weight:600}
 .no-click{pointer-events:none;user-select:none}
-/* ── Grey-out for conversation rounds ── */
+/* ── Grey-out ── */
 .grey-round .msg-row{opacity:.45;filter:grayscale(60%)}
-/* ── Ad rail layout ── */
-.ad-rail{width:220px;min-width:220px;background:#f3f4f6;border-left:1px solid #e5e7eb;flex-shrink:0;position:relative}
-#banner-ad{position:absolute;left:0;right:0;background:#fff;border-bottom:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+/* ── Ad rail: flex column, spacer pushes ad to bottom of content height ── */
+.ad-rail{width:220px;min-width:220px;background:#f3f4f6;border-left:1px solid #e5e7eb;flex-shrink:0;display:flex;flex-direction:column;align-self:stretch}
+.ad-rail-spacer{flex:1}
+#banner-ad{background:#fff;border-top:1px solid #e0e0e0;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
 #banner-ad .ba-close{display:flex;justify-content:flex-end;padding:6px 8px 0}
 #banner-ad .ba-close button{background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1}
 #banner-ad .ba-header{display:flex;align-items:center;gap:8px;padding:6px 12px}
@@ -58,85 +61,62 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
       <div class="sb-top"><button class="sb-btn">&#9776;</button><button class="sb-btn">&#9998;</button></div>
       <div class="sb-new">&#9998;</div>
     </div>
-    <div class="chat-area">
 
-      <!-- MESSAGES — only Round 3 visible, greyed out -->
-      <div class="messages" id="messages">
-        <div class="grey-round">
-          <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">Which one is best under $100?</div></div></div>
-          <div class="msg-row no-click"><div class="asst-body">
-            <p>For under $100, here are the top three picks &mdash; each best for a different kind of user:</p>
-            <ol>
-              <li><strong>Mophie Powerstation Ultra 25K &mdash; $99.99</strong>: 25,000mAh, three USB-C ports (140W + 100W + 100W), fully charges a MacBook Pro or up to 5&times; phones, premium anodized aluminum with silicone endcaps, LED charge indicator, 2-year warranty. Best for: laptop users who want max capacity.</li>
-              <li><strong>Baseus EnerGeek GR11 &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), 145W total output, built-in 100W retractable USB-C cable, quad-device charging (3&times; USB-C + 1&times; USB-A), 1.2-inch TFT display, 3-layer cooling. Charges a MacBook Pro 16&Prime; to 43% in 30 minutes. Best for: travelers who want cable-free convenience.</li>
-              <li><strong>Anker Prime 150W Charging Base &mdash; $99.99</strong>: Desktop fast-charging dock for Anker Prime power banks; 150W pogo-pin output (Prime bank to 50% in 21 min), plus 140W USB-C + 100W USB-C + 22.5W USB-A ports for other devices (max 150W combined), Bluetooth + Wi-Fi, Anker app with real-time stats, ActiveShield 4.0 safety monitoring. Best for: Anker Prime ecosystem users who want the fastest possible home recharging.</li>
-            </ol>
-            <p>The <strong>Mophie</strong> wins on raw capacity; the <strong>Baseus</strong> is the most travel-friendly with its built-in cable; the <strong>Anker Prime base</strong> is the fastest way to recharge a Prime power bank at home.</p>
-          </div></div>
+    <div class="content-row">
+      <div class="chat-area">
+        <div class="messages" id="messages">
+          <div class="grey-round">
+            <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">Which one is best under $100?</div></div></div>
+            <div class="msg-row no-click"><div class="asst-body">
+              <p>For under $100, here are the top three picks &mdash; each best for a different kind of user:</p>
+              <ol>
+                <li><strong>Mophie Powerstation Ultra 25K &mdash; $99.99</strong>: 25,000mAh, three USB-C ports (140W + 100W + 100W), fully charges a MacBook Pro or up to 5&times; phones, premium anodized aluminum with silicone endcaps, LED charge indicator, 2-year warranty. Best for: laptop users who want max capacity.</li>
+                <li><strong>Baseus EnerGeek GR11 &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), 145W total output, built-in 100W retractable USB-C cable, quad-device charging (3&times; USB-C + 1&times; USB-A), 1.2-inch TFT display, 3-layer cooling. Charges a MacBook Pro 16&Prime; to 43% in 30 minutes. Best for: travelers who want cable-free convenience.</li>
+                <li><strong>Anker Prime 150W Charging Base &mdash; $99.99</strong>: Desktop fast-charging dock for Anker Prime power banks; 150W pogo-pin output (Prime bank to 50% in 21 min), plus 140W USB-C + 100W USB-C + 22.5W USB-A ports for other devices (max 150W combined), Bluetooth + Wi-Fi, Anker app with real-time stats, ActiveShield 4.0 safety monitoring. Best for: Anker Prime ecosystem users who want the fastest possible home recharging.</li>
+              </ol>
+              <p>The <strong>Mophie</strong> wins on raw capacity; the <strong>Baseus</strong> is the most travel-friendly with its built-in cable; the <strong>Anker Prime base</strong> is the fastest way to recharge a Prime power bank at home.</p>
+            </div></div>
+          </div>
         </div>
-      </div><!-- /messages -->
+      </div>
 
-    </div><!-- /chat-area -->
-    <div class="ad-rail">
-<div id="banner-ad">
-  <div class="ba-close" style="position:relative">
-    <button id="ba-menu-btn" onclick="toggleBannerMenu(event)" style="background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1;padding:2px 4px">&#8943;</button>
-    <div id="ba-menu-dropdown" style="display:none;position:absolute;top:24px;right:0;width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1);z-index:999;padding:4px 0;font-size:12px;font-weight:400;color:#333">
-      <div onclick="dismissBannerAd('not_interested')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not interested</div>
-      <div onclick="dismissBannerAd('not_relevant')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not relevant to me</div>
-      <div onclick="dismissBannerAd('seen_too_often')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Seen this too often</div>
-      <div onclick="dismissBannerAd('covers_content')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Covers content</div>
-      <div onclick="dismissBannerAd('inappropriate')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Inappropriate</div>
-      <div style="border-top:1px solid #eee;margin:2px 0"></div>
-      <div onclick="dismissBannerAd('report_ad')" style="padding:8px 14px;cursor:pointer;color:#c00;transition:background .1s" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">Report this ad</div>
-    </div>
-  </div>
-  <div class="ba-header">
-    <div class="ba-logo">A</div>
-    <div>
-      <div class="ba-brand">Anker</div>
-      <div class="ba-sponsored">Sponsored</div>
-    </div>
-  </div>
-  <div class="ba-desc">Charge your Anker Prime power bank faster at home.</div>
-  <div class="ba-img-wrap"><img class="ba-img" src="https://universityofhouston.co1.qualtrics.com/ControlPanel/Graphic.php?IM=IM_dWOYFXzNSvDZ2pS" alt="Anker Prime 150W Charging Base"/></div>
-  <div class="ba-body">
-    <div class="ba-title">Anker Prime 150W Charging Base</div>
-    <div class="ba-meta">In stock &bull; $99.99 &bull; Charges Prime bank to 50% in 21 min</div>
-    <div class="ba-cta">Shop Now</div>
-  </div>
-</div>
+      <div class="ad-rail">
+        <div class="ad-rail-spacer"></div>
+        <div id="banner-ad">
+          <div class="ba-close" style="position:relative">
+            <button id="ba-menu-btn" onclick="toggleBannerMenu(event)" style="background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1;padding:2px 4px">&#8943;</button>
+            <div id="ba-menu-dropdown" style="display:none;position:absolute;top:24px;right:0;width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1);z-index:999;padding:4px 0;font-size:12px;font-weight:400;color:#333">
+              <div onclick="dismissBannerAd('not_interested')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not interested</div>
+              <div onclick="dismissBannerAd('not_relevant')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not relevant to me</div>
+              <div onclick="dismissBannerAd('seen_too_often')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Seen this too often</div>
+              <div onclick="dismissBannerAd('covers_content')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Covers content</div>
+              <div onclick="dismissBannerAd('inappropriate')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Inappropriate</div>
+              <div style="border-top:1px solid #eee;margin:2px 0"></div>
+              <div onclick="dismissBannerAd('report_ad')" style="padding:8px 14px;cursor:pointer;color:#c00;transition:background .1s" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">Report this ad</div>
+            </div>
+          </div>
+          <div class="ba-header">
+            <div class="ba-logo">A</div>
+            <div>
+              <div class="ba-brand">Anker</div>
+              <div class="ba-sponsored">Sponsored</div>
+            </div>
+          </div>
+          <div class="ba-desc">Charge your Anker Prime power bank faster at home.</div>
+          <div class="ba-img-wrap"><img class="ba-img" src="https://universityofhouston.co1.qualtrics.com/ControlPanel/Graphic.php?IM=IM_dWOYFXzNSvDZ2pS" alt="Anker Prime 150W Charging Base"/></div>
+          <div class="ba-body">
+            <div class="ba-title">Anker Prime 150W Charging Base</div>
+            <div class="ba-meta">In stock &bull; $99.99 &bull; Charges Prime bank to 50% in 21 min</div>
+            <div class="ba-cta">Shop Now</div>
+          </div>
+        </div>
+      </div>
 
-    </div>
+    </div><!-- /content-row -->
   </div><!-- /body-area -->
 </div><!-- /layout -->
 
 <script>
-/* Align banner ad so its bottom lines up with the bottom of the grey conversation text */
-function alignAd(){
-  var ad=document.getElementById('banner-ad');
-  var rail=document.querySelector('.ad-rail');
-  if(!ad||!rail) return;
-  /* find the very last msg-row to get the true text bottom */
-  var rows=document.querySelectorAll('.grey-round .msg-row');
-  var lastRow=rows[rows.length-1];
-  if(!lastRow) return;
-  var rowRect=lastRow.getBoundingClientRect();
-  var railRect=rail.getBoundingClientRect();
-  var contentBottom=rowRect.bottom-railRect.top;
-  var adH=ad.offsetHeight;
-  var topVal=contentBottom-adH;
-  ad.style.top=Math.max(0,topVal)+'px';
-}
-/* run after image loads so ad height is correct */
-var img=document.querySelector('.ba-img');
-if(img){
-  img.addEventListener('load',function(){alignAd();setTimeout(alignAd,200);});
-}
-alignAd();
-window.addEventListener('load',function(){alignAd();setTimeout(alignAd,300);setTimeout(alignAd,800);});
-window.addEventListener('resize',alignAd);
-
 /* ── Banner Ad Menu Functions ── */
 function toggleBannerMenu(e){
   e.stopPropagation();
