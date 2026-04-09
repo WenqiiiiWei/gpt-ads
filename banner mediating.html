@@ -115,19 +115,26 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
 /* Align banner ad so its bottom lines up with the bottom of the grey conversation text */
 function alignAd(){
   var ad=document.getElementById('banner-ad');
-  var greyRound=document.querySelector('.grey-round');
   var rail=document.querySelector('.ad-rail');
-  if(!ad||!greyRound||!rail) return;
-  var greyRect=greyRound.getBoundingClientRect();
+  if(!ad||!rail) return;
+  /* find the very last msg-row to get the true text bottom */
+  var rows=document.querySelectorAll('.grey-round .msg-row');
+  var lastRow=rows[rows.length-1];
+  if(!lastRow) return;
+  var rowRect=lastRow.getBoundingClientRect();
   var railRect=rail.getBoundingClientRect();
-  /* bottom of actual grey text content relative to rail top */
-  var contentBottom=greyRect.bottom-railRect.top;
+  var contentBottom=rowRect.bottom-railRect.top;
   var adH=ad.offsetHeight;
   var topVal=contentBottom-adH;
   ad.style.top=Math.max(0,topVal)+'px';
 }
+/* run after image loads so ad height is correct */
+var img=document.querySelector('.ba-img');
+if(img){
+  img.addEventListener('load',function(){alignAd();setTimeout(alignAd,200);});
+}
 alignAd();
-window.addEventListener('load',function(){alignAd();setTimeout(alignAd,300);});
+window.addEventListener('load',function(){alignAd();setTimeout(alignAd,300);setTimeout(alignAd,800);});
 window.addEventListener('resize',alignAd);
 
 /* ── Banner Ad Menu Functions ── */
