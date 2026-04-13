@@ -225,34 +225,31 @@ function showRound(round,question){
   },1200);
 }
 function scr(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
-function getRID(){try{var p=new URLSearchParams(window.location.search);var r=p.get('PRID');if(r)return r;p=new URLSearchParams(window.parent.location.search);return p.get('PRID')||'';}catch(e){return '';}}
-function trackAd(){var rid=getRID();var url='https://universityofhouston.iad1.qualtrics.com/jfe/form/SV_7OqApLPJQYbqXs2'+(rid?'?PRID='+rid:'');window.open(url,'_blank');}
 
 /* ── Shop Now Handler ── */
 function handleShopNow(el){
   el.style.background='#008BC0';
   el.textContent='Redirecting...';
 
-  /* 1) Set Qualtrics embedded data via parent */
+  /* Method 1: postMessage to parent — same as the working banner ad */
   try{
-    var qEngine=window.parent.Qualtrics.SurveyEngine.getInstance();
-    if(qEngine && typeof qEngine.setEmbeddedData==='function'){
-      qEngine.setEmbeddedData('shop_now_click','1');
+    window.parent.postMessage({type:'shopNowClicked'},'*');
+  }catch(e){}
+
+  /* Method 2: try setting Qualtrics embedded data directly via parent */
+  try{
+    if(window.parent.Qualtrics){
+      window.parent.Qualtrics.SurveyEngine.setEmbeddedData('shop_now_click','1');
     }
   }catch(e){}
 
-  /* 2) Also try the global setEmbeddedData on the parent page */
+  /* Method 3: try finding the question engine on the parent and clicking Next */
   try{
-    window.parent.Qualtrics.SurveyEngine.setEmbeddedData('shop_now_click','1');
+    var qEng=window.parent.document.querySelector('#NextButton');
+    if(qEng){
+      setTimeout(function(){qEng.click();},400);
+    }
   }catch(e){}
-
-  /* 3) postMessage as fallback so parent listener can pick it up */
-  try{
-    window.parent.postMessage({type:'shopNowClicked',embeddedData:{shop_now_click:'1'}},'*');
-  }catch(e){}
-
-  /* 4) Redirect to the shopping/tracking page */
-  setTimeout(function(){ trackAd(); },300);
 }
 
 /* ── Ad Menu Functions ── */
