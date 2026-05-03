@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ChatGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#fff;color:#202124}
+.layout{display:flex;width:100%;height:100vh;flex-direction:column}
+.topbar{padding:7px 12px;padding-right:232px;border-bottom:1px solid #e5e5e5;font-size:14px;font-weight:600;color:#202124;display:flex;align-items:center;justify-content:space-between}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-btn{background:none;border:1px solid #e0e0e0;border-radius:8px;padding:4px 10px;font-size:12px;color:#555;cursor:pointer}
+.body-area{display:flex;flex:1;overflow:hidden}
+.sidebar{width:44px;min-width:44px;background:#f9f9f9;border-right:1px solid #e5e5e5;padding:6px 4px;display:flex;flex-direction:column;align-items:center}
+.sb-top{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:4px}
+.sb-btn{background:transparent;border:none;color:#888;padding:4px;border-radius:6px;font-size:15px}
+.sb-new{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;color:#555;font-size:15px}
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.home-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+.home-title{font-size:22px;font-weight:600;color:#202124}
+.home-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.home-cta-label{font-size:12px;color:#9ca3af;letter-spacing:.3px}
+.home-start-btn{background:#f4f4f5;color:#374151;border:1px solid #e4e4e7;border-radius:12px;padding:13px 20px;font-size:13px;font-weight:400;cursor:pointer;font-family:inherit;text-align:left;transition:background .15s,border-color .15s;max-width:400px;width:100%;line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.home-start-btn:hover{background:#ebebec;border-color:#d1d5db}
+.home-arrow{color:#9ca3af;font-size:18px;flex-shrink:0}
+.messages{flex:1;overflow-y:auto;padding:16px 0 8px;display:none}
+.msg-row{padding:6px 8%}
+.divider{margin:4px 8%;border:none;border-top:1px dashed #e5e5e5}
+.user-wrap{display:flex;justify-content:flex-end}
+.user-bubble{background:#f0f0f0;border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:75%;font-size:14px;line-height:1.6}
+.asst-body{font-size:14px;line-height:1.7;color:#4d5156}
+.asst-body p{margin-bottom:10px}
+.asst-body ol,.asst-body ul{padding-left:20px;margin-bottom:10px}
+.asst-body li{margin-bottom:6px}
+.asst-body strong{color:#202124;font-weight:600}
+.suggest-wrap{padding:4px 8% 14px}
+.suggest-btn{background:#f0f4ff;border:2px solid #1a73e8;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#1a73e8;cursor:pointer;text-align:left;font-family:inherit;width:100%;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(26,115,232,.12);transition:background .15s}
+.suggest-btn:hover{background:#e0ecff}
+.typing-row{padding:8px 8%;display:none}
+.typing-dots{display:flex;gap:4px}
+.typing-dots span{width:7px;height:7px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.hidden-round{display:none}
+.input-area{padding:10px 8% 16px;border-top:1px solid #f1f3f4}
+.input-box{background:#f4f4f4;border:1px solid #e0e0e0;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.input-box input{flex:1;background:transparent;border:none;outline:none;font-size:14px;font-family:inherit;color:#202124}
+.input-box input::placeholder{color:#aaa}
+.send-btn{background:#d0d0d0;border:none;border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#555;font-size:15px}
+.disclaimer{text-align:center;font-size:11px;color:#aaa;margin-top:6px}
+.no-click{pointer-events:none;user-select:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+/* ── Ad rail layout ── */
+.ad-rail{width:220px;min-width:220px;background:#f3f4f6;border-left:1px solid #e5e7eb;flex-shrink:0;position:relative}
+#banner-ad{display:none;position:absolute;left:0;right:0;background:#fff;border-bottom:1px solid #e0e0e0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#banner-ad .ba-close{display:flex;justify-content:flex-end;padding:2px 6px 0}
+#banner-ad .ba-close button{background:none;border:none;font-size:16px;color:#9ca3af;cursor:pointer;line-height:1}
+#banner-ad .ba-header{display:flex;align-items:center;gap:7px;padding:2px 10px 0}
+#banner-ad .ba-logo{width:24px;height:24px;border-radius:6px;background:#00AEF0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+#banner-ad .ba-brand{font-size:11px;font-weight:600;color:#202124}
+#banner-ad .ba-sponsored{font-size:9px;color:#d93025;font-weight:600}
+#banner-ad .ba-desc{font-size:11px;color:#4d5156;padding:3px 10px 2px;line-height:1.4}
+#banner-ad .ba-img-wrap{width:100%;height:180px;overflow:hidden;background:#f5f5f7;display:block}
+#banner-ad .ba-img{width:100%;height:180px;object-fit:contain;display:block;padding:12px 30px;transform:scale(1.2)}
+#banner-ad .ba-body{padding:6px 10px 4px}
+#banner-ad .ba-title{font-size:11px;font-weight:700;color:#202124;margin-bottom:2px}
+#banner-ad .ba-specs{font-size:10px;color:#5f6368;margin-bottom:2px}
+#banner-ad .ba-price{font-size:11px;font-weight:700;color:#202124;margin-bottom:6px}
+#banner-ad .ba-price .ba-stock{font-size:10px;color:#188038;font-weight:600;margin-left:4px}
+#banner-ad .ba-cta{display:block;background:#00AEF0;color:#fff;text-align:center;font-size:12px;font-weight:600;padding:7px;border-radius:7px;text-decoration:none;margin-bottom:6px;font-family:inherit}
+#banner-ad .ba-cta:hover{background:#009fd6}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="topbar no-click">
+    <span style="font-size:14px;font-weight:600">ChatGPT <span style="font-size:11px;color:#999;font-weight:400">&#9660; GPT-5.4</span></span>
+    <div class="topbar-right"><button class="topbar-btn">Share</button><button class="topbar-btn">&#8943;</button></div>
+  </div>
+  <div class="body-area">
+    <div class="sidebar no-click">
+      <div class="sb-top"><button class="sb-btn">&#9776;</button><button class="sb-btn">&#9998;</button></div>
+      <div class="sb-new">&#9998;</div>
+    </div>
+    <div class="chat-area">
+
+      <!-- HOME SCREEN -->
+      <div class="home-screen" id="home-screen">
+        <div class="home-title">What can I help with?</div>
+        <div class="home-cta-wrap">
+          <div class="home-cta-label">Click below to get started</div>
+          <button class="home-start-btn" onclick="startConversation()">
+            What are the best portable power banks in 2026?
+            <span class="home-arrow">&#8250;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="messages" id="messages">
+
+        <!-- ── ROUND 1 ── -->
+        <div class="msg-row no-click"><div class="user-wrap"><div class="user-bubble">What are the best portable power banks in 2026?</div></div></div>
+        <div class="typing-row" id="typing-1"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-1">
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>Here are the <strong>top portable power banks of 2026</strong>:</p>
+            <ol>
+              <li><strong>Calim PowerStation 20K</strong> &mdash; 20,000mAh capacity, 140W USB-C PD output, three USB-C ports (140W + 100W + 65W), fully charges a MacBook Pro, premium anodized aluminum build</li>
+              <li><strong>Fento EnerGeek 20K</strong> &mdash; 20,000mAh capacity, 145W total output, integrated 100W retractable USB-C cable (1.97 ft), charges up to four devices simultaneously, TFT display</li>
+              <li><strong>Sanby ChargePak 20K</strong> &mdash; 20,000mAh capacity, up to 140W USB-C output, 2&times; USB-C + 1&times; USB-A, compact lightweight design with LED charge indicator</li>
+              <li><strong>Brelox VoltPack 20K</strong> &mdash; 20,000mAh capacity, 140W USB-C output, 2&times; USB-C + 1&times; USB-A, Qi2-certified 15W wireless charging pad on top, digital battery display</li>
+              <li><strong>Dorin MaxCell 20K</strong> &mdash; 20,000mAh capacity, 130W USB-C PD output, 3&times; USB-C ports, built-in kickstand for propping up your phone while charging, rubberized grip finish</li>
+            </ol>
+            <p>Happy to help if you want to dig deeper into any of these!</p>
+          </div></div>
+          <div class="suggest-wrap fade-in" id="suggestions-1">
+            <button class="suggest-btn" onclick="showRound(2,'What should I actually look for when buying one?')">What should I actually look for when buying one? <span>&rsaquo;</span></button>
+          </div>
+        </div>
+
+        <!-- ── ROUND 2 (buying guide) ── -->
+        <div class="typing-row" id="typing-2"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-2">
+          <hr class="divider no-click"/>
+          <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q2"></div></div></div>
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>Good question &mdash; here are the key things to consider:</p>
+            <ul>
+              <li><strong>Capacity (mAh):</strong> 10,000mAh gives roughly 2&ndash;3 phone charges; 20,000mAh gets you 4&ndash;5 and can fully charge a laptop once. All five options above sit at 20,000mAh.</li>
+              <li><strong>Wattage:</strong> Look for 100W+ USB-C output to charge laptops at full speed. These five range from 130W to 145W. Below 45W, many laptops charge slower than they drain.</li>
+              <li><strong>Ports:</strong> Some packs offer only USB-C; others mix in USB-A. If you charge multiple devices at once, check the port count &mdash; these range from 3 to 4 ports depending on the model.</li>
+              <li><strong>Extras:</strong> Some models include wireless charging pads or built-in kickstands, which can be handy for on-the-go use.</li>
+              <li><strong>Airline rules:</strong> The FAA limits carry-on power banks to 100Wh. All five fall well under that threshold (72&ndash;74Wh), so no special approval is needed.</li>
+            </ul>
+            <p>Do you have a specific budget in mind, or any questions about the product specifications?</p>
+          </div></div>
+          <div class="suggest-wrap fade-in" id="suggestions-2">
+            <button class="suggest-btn" onclick="showRound(3,'Which one is best under $100?')">Which one is best under $100? <span>&rsaquo;</span></button>
+          </div>
+        </div>
+
+        <!-- ── ROUND 3 (product recommendations) ── -->
+        <div class="typing-row" id="typing-3"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+        <div class="hidden-round" id="round-3">
+          <hr class="divider no-click"/>
+          <div class="msg-row fade-in no-click"><div class="user-wrap"><div class="user-bubble" id="user-q3"></div></div></div>
+          <div class="msg-row fade-in no-click"><div class="asst-body">
+            <p>For under $100, here are the top three picks:</p>
+            <ol>
+              <li><strong>Fento EnerGeek 20K &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), 145W total output, built-in 100W retractable USB-C cable, quad-device charging (3&times; USB-C + 1&times; USB-A), 1.2-inch TFT display, 3-layer cooling. Can charge most laptops to around 40% in just 30 minutes.</li>
+              <li><strong>Sanby ChargePak 20K &mdash; $99.99</strong>: 20,000mAh (72Wh, airline-safe), up to 140W USB-C output, 2&times; USB-C + 1&times; USB-A, compact lightweight design at just 0.9 lbs, LED charge indicator. Gets most phones from 0 to 50% in about 25 minutes.</li>
+              <li><strong>Calim PowerStation 20K &mdash; $99.99</strong>: 20,000mAh (74Wh, airline-safe), three USB-C ports (140W + 100W + 65W), charges up to three devices at once, premium anodized aluminum with silicone endcaps, LED charge indicator. Can charge a typical laptop to around 55% in 30 minutes.</li>
+            </ol>
+          </div></div>
+
+
+        </div>
+
+      </div><!-- /messages -->
+
+      <div class="input-area no-click">
+        <div class="input-box"><input type="text" placeholder="Message ChatGPT" readonly/><button class="send-btn">&#8593;</button></div>
+        <div class="disclaimer">ChatGPT can make mistakes. Consider checking important information.</div>
+      </div>
+    </div><!-- /chat-area -->
+    <div class="ad-rail">
+<div id="banner-ad">
+  <div class="ba-close" style="position:relative">
+    <button id="ba-menu-btn" onclick="toggleBannerMenu(event)" style="background:none;border:none;font-size:18px;color:#9ca3af;cursor:pointer;line-height:1;padding:2px 4px">&#8943;</button>
+    <div id="ba-menu-dropdown" style="display:none;position:absolute;top:24px;right:0;width:180px;background:#fff;border:1px solid #e0e0e0;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.1);z-index:999;padding:4px 0;font-size:12px;font-weight:400;color:#333">
+      <div onclick="dismissBannerAd('not_interested')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not interested</div>
+      <div onclick="dismissBannerAd('not_relevant')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Not relevant to me</div>
+      <div onclick="dismissBannerAd('seen_too_often')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Seen this too often</div>
+      <div onclick="dismissBannerAd('covers_content')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Covers content</div>
+      <div onclick="dismissBannerAd('inappropriate')" style="padding:8px 14px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Inappropriate</div>
+      <div style="border-top:1px solid #eee;margin:2px 0"></div>
+      <div onclick="dismissBannerAd('report_ad')" style="padding:8px 14px;cursor:pointer;color:#c00;transition:background .1s" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">Report this ad</div>
+    </div>
+  </div>
+  <div class="ba-header">
+    <div class="ba-logo">S</div>
+    <div>
+      <div class="ba-brand">Sanby</div>
+      <div class="ba-sponsored">Sponsored</div>
+    </div>
+  </div>
+  <div class="ba-desc">Compact, lightweight, and ready to go &mdash; keep your devices charged anywhere.</div>
+  <div class="ba-img-wrap"><img class="ba-img" src="https://universityofhouston.co1.qualtrics.com/ControlPanel/Graphic.php?IM=IM_Zbd8mLiJP02AkxZ" alt="Sanby ChargePak 20K"/></div>
+  <div class="ba-body">
+    <div class="ba-title">Sanby ChargePak 20K</div>
+    <div class="ba-specs">20,000mAh &bull; 140W USB-C &bull; 0.9 lbs</div>
+    <div class="ba-price">$99.99 <span class="ba-stock">In stock</span></div>
+    <a class="ba-cta" href="javascript:void(0);" onclick="window.parent.postMessage({type:'shopNowClicked'},'*'); this.style.background='#008BC0'; this.textContent='Redirecting...';" style="cursor:pointer">Shop Now</a>
+  </div>
+</div>
+
+    </div>
+  </div><!-- /body-area -->
+</div><!-- /layout -->
+
+<script>
+function startConversation(){
+  document.getElementById('home-screen').style.display='none';
+  document.getElementById('messages').style.display='block';
+  var t=document.getElementById('typing-1');t.style.display='block';
+  setTimeout(function(){t.style.display='none';document.getElementById('round-1').style.display='block';scr();},1200);
+}
+function showRound(round,question){
+  var prev=document.getElementById('suggestions-'+(round-1));if(prev)prev.style.display='none';
+  var typing=document.getElementById('typing-'+round);if(typing)typing.style.display='block';
+  setTimeout(function(){
+    if(typing)typing.style.display='none';
+    var r=document.getElementById('round-'+round);
+    if(r){r.style.display='block';var q=document.getElementById('user-q'+round);if(q)q.textContent=question;}
+    if(round===3){setTimeout(function(){
+      var ad=document.getElementById('banner-ad');
+      var r3=document.getElementById('round-3');
+      var rail=document.querySelector('.ad-rail');
+      if(ad&&r3&&rail){
+        ad.style.display='block';
+        function align(){
+          var r3Bottom=r3.getBoundingClientRect().bottom;
+          var railTop=rail.getBoundingClientRect().top;
+          var adH=ad.offsetHeight;
+          var topVal=r3Bottom-railTop-adH;
+          ad.style.top=Math.max(0,topVal)+'px';
+        }
+        align();
+        setTimeout(align,200);
+        setTimeout(align,500);
+      }
+      scr();
+    },600);}
+    scr();
+  },1200);
+}
+function scr(){setTimeout(function(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})},100)}
+
+/* ── Banner Ad Menu Functions ── */
+function toggleBannerMenu(e){
+  e.stopPropagation();
+  var menu=document.getElementById('ba-menu-dropdown');
+  menu.style.display=(menu.style.display==='none')?'block':'none';
+}
+
+function dismissBannerAd(reason){
+  try{
+    window.parent.postMessage({type:'adDismissed',reason:reason},'*');
+  }catch(e){}
+
+  document.getElementById('ba-menu-dropdown').style.display='none';
+
+  var adContainer=document.getElementById('banner-ad');
+  var reasonLabels={
+    'not_interested':'Not interested',
+    'not_relevant':'Not relevant to me',
+    'seen_too_often':'Seen this too often',
+    'covers_content':'Covers content',
+    'inappropriate':'Inappropriate',
+    'report_ad':'Reported'
+  };
+  var label=reasonLabels[reason]||reason;
+  adContainer.innerHTML='<div style="padding:30px 16px;text-align:center">'
+    +'<div style="font-size:13px;color:#70757a;margin-bottom:4px">Ad removed</div>'
+    +'<div style="font-size:11px;color:#9ca3af">Reason: '+label+'</div>'
+    +'<div style="font-size:11px;color:#9ca3af;margin-top:8px">We\'ll try to show more relevant content.</div>'
+    +'</div>';
+}
+
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('ba-menu-dropdown');
+  if(menu && menu.style.display==='block'){
+    menu.style.display='none';
+  }
+});
+</script>
+</body>
+</html>
