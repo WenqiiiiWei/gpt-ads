@@ -168,6 +168,9 @@ body{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;background:#
                 <div class="th-block" data-at="0">
                   <div class="th-step">Picking the best value</div>
                   <div class="th-note">Let me weigh the most compact, well-reviewed options and go with the strongest pick.</div>
+                  <div class="th-sources">
+                    <div class="th-src" data-srcdelay="0"><span class="th-fav" style="background:#e8612c">G</span>GadgetLab Reviews</div>
+                  </div>
                 </div>
 
               </div>
@@ -286,8 +289,8 @@ function runThinking(){
 
   /* Consistent pacing — tuned so the whole reasoning lasts ~30s */
   var CHAR=13;    // ms per character while typing (smooth, like real streaming)
-  var ITEM=330;   // ms between revealed sub-items (constant)
-  var PAUSE=350;  // ms between blocks (short condition)
+  var ITEM=250;   // ms between revealed sub-items (constant)
+  var PAUSE=300;  // ms between blocks (short condition)
 
   /* Status line shown while each block is being written */
   var statuses=[
@@ -362,11 +365,11 @@ function runThinking(){
       streamAnswer(function(){
         setTimeout(function(){var ad=document.getElementById('native-ad');if(ad)ad.style.display='block';scr();},500);
       });
-    },400);   // short condition: brief pause before the answer
+    },350);   // short condition: brief pause before the answer
   }
 
   set('Thinking');
-  setTimeout(function(){doBlock(0);},300);
+  setTimeout(function(){doBlock(0);},250);
 }
 
 /* Finish the reasoning box: stop rolling, swap spinner for a check, set
