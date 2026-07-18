@@ -455,12 +455,65 @@ function collapseThinking(seconds){
   var sc=document.getElementById('th-scroll');if(sc)sc.style.maxHeight='';
   var box=document.getElementById('think-box');
   if(box){box.classList.remove('rolling');box.classList.add('done');box.classList.add('collapsed');}
+  /* Default: participant has NOT expanded the finished thinking box */
+  try{
+    Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpanded','0');
+    Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpandTime','0');
+    Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxToggleCount','0');
+    Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpandTiming','never');
+  }catch(e){}
+  try{window.parent.postMessage({type:'thinkBoxExpanded',value:'0'},'*');}catch(e){}
 }
+
+/* --- Think box engagement tracking state --- */
+var tbOpenStart=null;    // timestamp when the finished box was last expanded (null = closed)
+var tbOpenTotal=0;       // accumulated open time in ms across expand/collapse cycles
+var tbToggleCount=0;     // number of times participant expanded the finished box
+var tbTimingSet=false;   // first-expansion timing recorded?
+
+/* Write current total open seconds to embedded data */
+function tbWriteTime(){
+  var total=tbOpenTotal+(tbOpenStart?(Date.now()-tbOpenStart):0);
+  var secs=String(Math.round(total/1000));
+  try{Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpandTime',secs);}catch(e){}
+  try{window.parent.postMessage({type:'thinkBoxExpandTime',value:secs},'*');}catch(e){}
+}
+/* While the box is open, keep the saved value fresh every 2s so the time
+   is captured even if the participant advances with the box still open */
+setInterval(function(){if(tbOpenStart)tbWriteTime();},2000);
 
 /* Expand / collapse the reasoning box from its header */
 function toggleThink(){
   var box=document.getElementById('think-box');
-  if(box)box.classList.toggle('collapsed');
+  if(box){
+    var isDone=box.classList.contains('done');
+    var expanding=isDone && box.classList.contains('collapsed');
+    box.classList.toggle('collapsed');
+    if(expanding){
+      /* Participant clicked to unfold the thinking process after thinking finished */
+      try{Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpanded','1');}catch(e){}
+      try{window.parent.postMessage({type:'thinkBoxExpanded',value:'1'},'*');}catch(e){}
+      /* Count this expansion */
+      tbToggleCount++;
+      try{Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxToggleCount',String(tbToggleCount));}catch(e){}
+      try{window.parent.postMessage({type:'thinkBoxToggleCount',value:String(tbToggleCount)},'*');}catch(e){}
+      /* First expansion only: was the ad already on screen? */
+      if(!tbTimingSet){
+        tbTimingSet=true;
+        var ad=document.getElementById('native-ad');
+        var timing=(ad && ad.style.display==='block')?'after_ad':'before_ad';
+        try{Qualtrics.SurveyEngine.setEmbeddedData('ThinkBoxExpandTiming',timing);}catch(e){}
+        try{window.parent.postMessage({type:'thinkBoxExpandTiming',value:timing},'*');}catch(e){}
+      }
+      /* Start the open-time clock */
+      tbOpenStart=Date.now();
+    } else if(isDone && tbOpenStart){
+      /* Participant collapsed the box: bank the elapsed time */
+      tbOpenTotal+=Date.now()-tbOpenStart;
+      tbOpenStart=null;
+      tbWriteTime();
+    }
+  }
   scr();
 }
 
